@@ -17,16 +17,13 @@ A Flutter plugin that demonstrates bidirectional communication between Flutter a
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
 
-  # Include our native library - use different libraries for simulator vs device
-  s.ios.vendored_libraries = 'Frameworks/libuniffi_callback_demo_device.dylib'
-  s.ios.sim.vendored_libraries = 'Frameworks/libuniffi_callback_demo_simulator.dylib'
-  s.library = 'c++'
+  # Demo mode - no native library needed
+  # s.vendored_libraries = 'Frameworks/libuniffi_callback_demo_simulator.dylib'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 
     'DEFINES_MODULE' => 'YES', 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'OTHER_LDFLAGS' => '-lc++'
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
   }
   s.swift_version = '5.0'
 

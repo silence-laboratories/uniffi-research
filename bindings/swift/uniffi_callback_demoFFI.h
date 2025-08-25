@@ -78,7 +78,77 @@ void uniffi_uniffi_callback_demo_fn_method_callbackservice_simulate_background_w
 );
 void uniffi_uniffi_callback_demo_fn_method_callbackservice_trigger_event(void*_Nonnull ptr, RustBuffer event_type, RustBuffer message, RustCallStatus *_Nonnull out_status
 );
+void uniffi_uniffi_callback_demo_fn_free_dataprocessingservice(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+void*_Nonnull uniffi_uniffi_callback_demo_fn_constructor_dataprocessingservice_new(RustCallStatus *_Nonnull out_status
+    
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_batch_transform(void*_Nonnull ptr, RustBuffer data, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_get_processor_info(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_process_single_item(void*_Nonnull ptr, RustBuffer item, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_set_processor(void*_Nonnull ptr, uint32_t processor_id, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_validate_and_process(void*_Nonnull ptr, RustBuffer input, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_free_storageservice(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+void*_Nonnull uniffi_uniffi_callback_demo_fn_constructor_storageservice_new(RustCallStatus *_Nonnull out_status
+    
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_storageservice_backup_multiple_keys(void*_Nonnull ptr, RustBuffer keys, RustBuffer backup_key, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_storageservice_copy_data(void*_Nonnull ptr, RustBuffer source_key, RustBuffer target_key, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_storageservice_read_data(void*_Nonnull ptr, RustBuffer key, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_method_storageservice_set_client(void*_Nonnull ptr, uint32_t client_id, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_storageservice_write_data(void*_Nonnull ptr, RustBuffer key, RustBuffer value, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_free_userservice(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+void*_Nonnull uniffi_uniffi_callback_demo_fn_constructor_userservice_new(RustCallStatus *_Nonnull out_status
+    
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_userservice_calculate_user_score(void*_Nonnull ptr, uint32_t user_id, RustBuffer metrics, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_userservice_get_user(void*_Nonnull ptr, uint32_t user_id, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_method_userservice_send_notification(void*_Nonnull ptr, uint32_t user_id, RustBuffer message, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_method_userservice_set_manager(void*_Nonnull ptr, uint32_t manager_id, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_userservice_update_user_preferences(void*_Nonnull ptr, uint32_t user_id, RustBuffer preferences, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_free_websocketservice(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+void*_Nonnull uniffi_uniffi_callback_demo_fn_constructor_websocketservice_new(RustCallStatus *_Nonnull out_status
+    
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_websocketservice_ping_pong(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_websocketservice_read_message(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_websocketservice_send_and_read(void*_Nonnull ptr, RustBuffer message, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_websocketservice_send_batch_messages(void*_Nonnull ptr, RustBuffer messages, RustCallStatus *_Nonnull out_status
+);
+RustBuffer uniffi_uniffi_callback_demo_fn_method_websocketservice_send_message(void*_Nonnull ptr, RustBuffer message, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_method_websocketservice_set_client(void*_Nonnull ptr, uint32_t client_id, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_init_callback_dataprocessor(ForeignCallback _Nonnull callback_stub, RustCallStatus *_Nonnull out_status
+);
 void uniffi_uniffi_callback_demo_fn_init_callback_eventcallback(ForeignCallback _Nonnull callback_stub, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_init_callback_storageclient(ForeignCallback _Nonnull callback_stub, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_init_callback_userprofilemanager(ForeignCallback _Nonnull callback_stub, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_init_callback_websocketclient(ForeignCallback _Nonnull callback_stub, RustCallStatus *_Nonnull out_status
 );
 RustBuffer uniffi_uniffi_callback_demo_fn_func_create_test_data(uint32_t size, RustCallStatus *_Nonnull out_status
 );
@@ -86,9 +156,25 @@ RustBuffer uniffi_uniffi_callback_demo_fn_func_format_message(RustBuffer prefix,
 );
 uint32_t uniffi_uniffi_callback_demo_fn_func_register_callback(uint64_t callback, RustCallStatus *_Nonnull out_status
 );
+uint32_t uniffi_uniffi_callback_demo_fn_func_register_data_processor(uint64_t processor, RustCallStatus *_Nonnull out_status
+);
+uint32_t uniffi_uniffi_callback_demo_fn_func_register_storage_client(uint64_t client, RustCallStatus *_Nonnull out_status
+);
+uint32_t uniffi_uniffi_callback_demo_fn_func_register_user_manager(uint64_t manager, RustCallStatus *_Nonnull out_status
+);
+uint32_t uniffi_uniffi_callback_demo_fn_func_register_websocket_client(uint64_t client, RustCallStatus *_Nonnull out_status
+);
 void uniffi_uniffi_callback_demo_fn_func_set_service_callback(void*_Nonnull service, uint32_t callback_id, RustCallStatus *_Nonnull out_status
 );
 void uniffi_uniffi_callback_demo_fn_func_unregister_callback(uint32_t callback_id, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_func_unregister_data_processor(uint32_t processor_id, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_func_unregister_storage_client(uint32_t client_id, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_func_unregister_user_manager(uint32_t manager_id, RustCallStatus *_Nonnull out_status
+);
+void uniffi_uniffi_callback_demo_fn_func_unregister_websocket_client(uint32_t client_id, RustCallStatus *_Nonnull out_status
 );
 RustBuffer ffi_uniffi_callback_demo_rustbuffer_alloc(int32_t size, RustCallStatus *_Nonnull out_status
 );
@@ -213,10 +299,34 @@ uint16_t uniffi_uniffi_callback_demo_checksum_func_format_message(void
 uint16_t uniffi_uniffi_callback_demo_checksum_func_register_callback(void
     
 );
+uint16_t uniffi_uniffi_callback_demo_checksum_func_register_data_processor(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_register_storage_client(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_register_user_manager(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_register_websocket_client(void
+    
+);
 uint16_t uniffi_uniffi_callback_demo_checksum_func_set_service_callback(void
     
 );
 uint16_t uniffi_uniffi_callback_demo_checksum_func_unregister_callback(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_unregister_data_processor(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_unregister_storage_client(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_unregister_user_manager(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_func_unregister_websocket_client(void
     
 );
 uint16_t uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers(void
@@ -234,7 +344,94 @@ uint16_t uniffi_uniffi_callback_demo_checksum_method_callbackservice_simulate_ba
 uint16_t uniffi_uniffi_callback_demo_checksum_method_callbackservice_trigger_event(void
     
 );
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_batch_transform(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_get_processor_info(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_process_single_item(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_set_processor(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_validate_and_process(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageservice_backup_multiple_keys(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageservice_copy_data(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageservice_read_data(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageservice_set_client(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageservice_write_data(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userservice_calculate_user_score(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userservice_get_user(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userservice_send_notification(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userservice_set_manager(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userservice_update_user_preferences(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketservice_ping_pong(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketservice_read_message(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_and_read(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_batch_messages(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_message(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketservice_set_client(void
+    
+);
 uint16_t uniffi_uniffi_callback_demo_checksum_constructor_callbackservice_new(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_constructor_dataprocessingservice_new(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_constructor_storageservice_new(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_constructor_userservice_new(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_constructor_websocketservice_new(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessor_process_item(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessor_validate_input(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessor_transform_data(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_dataprocessor_get_processor_name(void
     
 );
 uint16_t uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_event(void
@@ -244,6 +441,30 @@ uint16_t uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_data_recei
     
 );
 uint16_t uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageclient_read(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_storageclient_write(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_get_user_info(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_update_preferences(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_calculate_score(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_notify_user(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketclient_send(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_websocketclient_read(void
     
 );
 uint32_t ffi_uniffi_callback_demo_uniffi_contract_version(void

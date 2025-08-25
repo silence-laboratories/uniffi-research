@@ -381,7 +381,11 @@ internal interface _UniFFILib : Library {
             .also { lib: _UniFFILib ->
                 uniffiCheckContractApiVersion(lib)
                 uniffiCheckApiChecksums(lib)
+                FfiConverterTypeDataProcessor.register(lib)
                 FfiConverterTypeEventCallback.register(lib)
+                FfiConverterTypeStorageClient.register(lib)
+                FfiConverterTypeUserProfileManager.register(lib)
+                FfiConverterTypeWebSocketClient.register(lib)
                 }
         }
     }
@@ -400,7 +404,73 @@ internal interface _UniFFILib : Library {
     ): Unit
     fun uniffi_uniffi_callback_demo_fn_method_callbackservice_trigger_event(`ptr`: Pointer,`eventType`: RustBuffer.ByValue,`message`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
     ): Unit
+    fun uniffi_uniffi_callback_demo_fn_free_dataprocessingservice(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_constructor_dataprocessingservice_new(_uniffi_out_err: RustCallStatus, 
+    ): Pointer
+    fun uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_batch_transform(`ptr`: Pointer,`data`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_get_processor_info(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_process_single_item(`ptr`: Pointer,`item`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_set_processor(`ptr`: Pointer,`processorId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_validate_and_process(`ptr`: Pointer,`input`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_free_storageservice(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_constructor_storageservice_new(_uniffi_out_err: RustCallStatus, 
+    ): Pointer
+    fun uniffi_uniffi_callback_demo_fn_method_storageservice_backup_multiple_keys(`ptr`: Pointer,`keys`: RustBuffer.ByValue,`backupKey`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_storageservice_copy_data(`ptr`: Pointer,`sourceKey`: RustBuffer.ByValue,`targetKey`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_storageservice_read_data(`ptr`: Pointer,`key`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_storageservice_set_client(`ptr`: Pointer,`clientId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_method_storageservice_write_data(`ptr`: Pointer,`key`: RustBuffer.ByValue,`value`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_free_userservice(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_constructor_userservice_new(_uniffi_out_err: RustCallStatus, 
+    ): Pointer
+    fun uniffi_uniffi_callback_demo_fn_method_userservice_calculate_user_score(`ptr`: Pointer,`userId`: Int,`metrics`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_userservice_get_user(`ptr`: Pointer,`userId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_userservice_send_notification(`ptr`: Pointer,`userId`: Int,`message`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_method_userservice_set_manager(`ptr`: Pointer,`managerId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_method_userservice_update_user_preferences(`ptr`: Pointer,`userId`: Int,`preferences`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_free_websocketservice(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_constructor_websocketservice_new(_uniffi_out_err: RustCallStatus, 
+    ): Pointer
+    fun uniffi_uniffi_callback_demo_fn_method_websocketservice_ping_pong(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_websocketservice_read_message(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_websocketservice_send_and_read(`ptr`: Pointer,`message`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_websocketservice_send_batch_messages(`ptr`: Pointer,`messages`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_websocketservice_send_message(`ptr`: Pointer,`message`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_uniffi_callback_demo_fn_method_websocketservice_set_client(`ptr`: Pointer,`clientId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_init_callback_dataprocessor(`callbackStub`: ForeignCallback,_uniffi_out_err: RustCallStatus, 
+    ): Unit
     fun uniffi_uniffi_callback_demo_fn_init_callback_eventcallback(`callbackStub`: ForeignCallback,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_init_callback_storageclient(`callbackStub`: ForeignCallback,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_init_callback_userprofilemanager(`callbackStub`: ForeignCallback,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_init_callback_websocketclient(`callbackStub`: ForeignCallback,_uniffi_out_err: RustCallStatus, 
     ): Unit
     fun uniffi_uniffi_callback_demo_fn_func_create_test_data(`size`: Int,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
@@ -408,9 +478,25 @@ internal interface _UniFFILib : Library {
     ): RustBuffer.ByValue
     fun uniffi_uniffi_callback_demo_fn_func_register_callback(`callback`: Long,_uniffi_out_err: RustCallStatus, 
     ): Int
+    fun uniffi_uniffi_callback_demo_fn_func_register_data_processor(`processor`: Long,_uniffi_out_err: RustCallStatus, 
+    ): Int
+    fun uniffi_uniffi_callback_demo_fn_func_register_storage_client(`client`: Long,_uniffi_out_err: RustCallStatus, 
+    ): Int
+    fun uniffi_uniffi_callback_demo_fn_func_register_user_manager(`manager`: Long,_uniffi_out_err: RustCallStatus, 
+    ): Int
+    fun uniffi_uniffi_callback_demo_fn_func_register_websocket_client(`client`: Long,_uniffi_out_err: RustCallStatus, 
+    ): Int
     fun uniffi_uniffi_callback_demo_fn_func_set_service_callback(`service`: Pointer,`callbackId`: Int,_uniffi_out_err: RustCallStatus, 
     ): Unit
     fun uniffi_uniffi_callback_demo_fn_func_unregister_callback(`callbackId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_func_unregister_data_processor(`processorId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_func_unregister_storage_client(`clientId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_func_unregister_user_manager(`managerId`: Int,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_uniffi_callback_demo_fn_func_unregister_websocket_client(`clientId`: Int,_uniffi_out_err: RustCallStatus, 
     ): Unit
     fun ffi_uniffi_callback_demo_rustbuffer_alloc(`size`: Int,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
@@ -532,9 +618,25 @@ internal interface _UniFFILib : Library {
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_func_register_callback(
     ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_register_data_processor(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_register_storage_client(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_register_user_manager(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_register_websocket_client(
+    ): Short
     fun uniffi_uniffi_callback_demo_checksum_func_set_service_callback(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_func_unregister_callback(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_unregister_data_processor(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_unregister_storage_client(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_unregister_user_manager(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_func_unregister_websocket_client(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers(
     ): Short
@@ -546,13 +648,87 @@ internal interface _UniFFILib : Library {
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_callbackservice_trigger_event(
     ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_batch_transform(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_get_processor_info(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_process_single_item(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_set_processor(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_validate_and_process(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageservice_backup_multiple_keys(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageservice_copy_data(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageservice_read_data(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageservice_set_client(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageservice_write_data(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userservice_calculate_user_score(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userservice_get_user(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userservice_send_notification(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userservice_set_manager(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userservice_update_user_preferences(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketservice_ping_pong(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketservice_read_message(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_and_read(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_batch_messages(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_message(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketservice_set_client(
+    ): Short
     fun uniffi_uniffi_callback_demo_checksum_constructor_callbackservice_new(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_constructor_dataprocessingservice_new(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_constructor_storageservice_new(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_constructor_userservice_new(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_constructor_websocketservice_new(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessor_process_item(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessor_validate_input(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessor_transform_data(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_dataprocessor_get_processor_name(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_event(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_data_received(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageclient_read(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_storageclient_write(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_get_user_info(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_update_preferences(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_calculate_score(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_notify_user(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketclient_send(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_websocketclient_read(
     ): Short
     fun ffi_uniffi_callback_demo_uniffi_contract_version(
     ): Int
@@ -580,10 +756,34 @@ private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
     if (lib.uniffi_uniffi_callback_demo_checksum_func_register_callback() != 43118.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_register_data_processor() != 7451.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_register_storage_client() != 43187.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_register_user_manager() != 56399.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_register_websocket_client() != 22419.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_uniffi_callback_demo_checksum_func_set_service_callback() != 65210.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_uniffi_callback_demo_checksum_func_unregister_callback() != 15590.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_unregister_data_processor() != 58159.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_unregister_storage_client() != 7700.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_unregister_user_manager() != 21103.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_func_unregister_websocket_client() != 49975.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers() != 39402.toShort()) {
@@ -601,7 +801,94 @@ private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
     if (lib.uniffi_uniffi_callback_demo_checksum_method_callbackservice_trigger_event() != 36495.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_batch_transform() != 41337.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_get_processor_info() != 12223.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_process_single_item() != 36609.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_set_processor() != 29192.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_validate_and_process() != 53686.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageservice_backup_multiple_keys() != 26356.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageservice_copy_data() != 16511.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageservice_read_data() != 37470.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageservice_set_client() != 39818.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageservice_write_data() != 20020.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userservice_calculate_user_score() != 52355.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userservice_get_user() != 46262.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userservice_send_notification() != 42386.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userservice_set_manager() != 25602.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userservice_update_user_preferences() != 16280.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketservice_ping_pong() != 7567.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketservice_read_message() != 23634.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_and_read() != 40441.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_batch_messages() != 4381.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_message() != 42697.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketservice_set_client() != 53282.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_uniffi_callback_demo_checksum_constructor_callbackservice_new() != 24557.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_constructor_dataprocessingservice_new() != 22189.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_constructor_storageservice_new() != 5653.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_constructor_userservice_new() != 12398.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_constructor_websocketservice_new() != 864.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessor_process_item() != 21290.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessor_validate_input() != 7186.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessor_transform_data() != 33233.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_dataprocessor_get_processor_name() != 52683.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_event() != 65012.toShort()) {
@@ -611,6 +898,30 @@ private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers() != 26463.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageclient_read() != 65022.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_storageclient_write() != 31647.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_get_user_info() != 4556.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_update_preferences() != 28031.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_calculate_score() != 3606.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_notify_user() != 10907.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketclient_send() != 7602.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_websocketclient_read() != 34955.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -657,6 +968,66 @@ public object FfiConverterInt: FfiConverter<Int, Int> {
 
     override fun write(value: Int, buf: ByteBuffer) {
         buf.putInt(value)
+    }
+}
+
+public object FfiConverterULong: FfiConverter<ULong, Long> {
+    override fun lift(value: Long): ULong {
+        return value.toULong()
+    }
+
+    override fun read(buf: ByteBuffer): ULong {
+        return lift(buf.getLong())
+    }
+
+    override fun lower(value: ULong): Long {
+        return value.toLong()
+    }
+
+    override fun allocationSize(value: ULong) = 8
+
+    override fun write(value: ULong, buf: ByteBuffer) {
+        buf.putLong(value.toLong())
+    }
+}
+
+public object FfiConverterDouble: FfiConverter<Double, Double> {
+    override fun lift(value: Double): Double {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Double {
+        return buf.getDouble()
+    }
+
+    override fun lower(value: Double): Double {
+        return value
+    }
+
+    override fun allocationSize(value: Double) = 8
+
+    override fun write(value: Double, buf: ByteBuffer) {
+        buf.putDouble(value)
+    }
+}
+
+public object FfiConverterBoolean: FfiConverter<Boolean, Byte> {
+    override fun lift(value: Byte): Boolean {
+        return value.toInt() != 0
+    }
+
+    override fun read(buf: ByteBuffer): Boolean {
+        return lift(buf.get())
+    }
+
+    override fun lower(value: Boolean): Byte {
+        return if (value) 1.toByte() else 0.toByte()
+    }
+
+    override fun allocationSize(value: Boolean) = 1
+
+    override fun write(value: Boolean, buf: ByteBuffer) {
+        buf.put(lower(value))
     }
 }
 
@@ -1011,6 +1382,687 @@ public object FfiConverterTypeCallbackService: FfiConverter<CallbackService, Poi
 
 
 
+public interface DataProcessingServiceInterface {
+    
+    fun `batchTransform`(`data`: List<String>): List<String>?
+    fun `getProcessorInfo`(): String?
+    fun `processSingleItem`(`item`: String): ProcessResult?
+    fun `setProcessor`(`processorId`: UInt)
+    fun `validateAndProcess`(`input`: String): ProcessResult?
+    companion object
+}
+
+class DataProcessingService(
+    pointer: Pointer
+) : FFIObject(pointer), DataProcessingServiceInterface {
+    constructor() :
+        this(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_constructor_dataprocessingservice_new(_status)
+})
+
+    /**
+     * Disconnect the object from the underlying Rust object.
+     *
+     * It can be called more than once, but once called, interacting with the object
+     * causes an `IllegalStateException`.
+     *
+     * Clients **must** call this method once done with the object, or cause a memory leak.
+     */
+    override protected fun freeRustArcPtr() {
+        rustCall() { status ->
+            _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_free_dataprocessingservice(this.pointer, status)
+        }
+    }
+
+    override fun `batchTransform`(`data`: List<String>): List<String>? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_batch_transform(it,
+        FfiConverterSequenceString.lower(`data`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalSequenceString.lift(it)
+        }
+    
+    override fun `getProcessorInfo`(): String? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_get_processor_info(it,
+        
+        _status)
+}
+        }.let {
+            FfiConverterOptionalString.lift(it)
+        }
+    
+    override fun `processSingleItem`(`item`: String): ProcessResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_process_single_item(it,
+        FfiConverterString.lower(`item`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeProcessResult.lift(it)
+        }
+    
+    override fun `setProcessor`(`processorId`: UInt) =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_set_processor(it,
+        FfiConverterUInt.lower(`processorId`),
+        _status)
+}
+        }
+    
+    
+    override fun `validateAndProcess`(`input`: String): ProcessResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_validate_and_process(it,
+        FfiConverterString.lower(`input`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeProcessResult.lift(it)
+        }
+    
+    
+
+    
+    companion object
+    
+}
+
+public object FfiConverterTypeDataProcessingService: FfiConverter<DataProcessingService, Pointer> {
+    override fun lower(value: DataProcessingService): Pointer = value.callWithPointer { it }
+
+    override fun lift(value: Pointer): DataProcessingService {
+        return DataProcessingService(value)
+    }
+
+    override fun read(buf: ByteBuffer): DataProcessingService {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: DataProcessingService) = 8
+
+    override fun write(value: DataProcessingService, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+
+
+public interface StorageServiceInterface {
+    
+    fun `backupMultipleKeys`(`keys`: List<String>, `backupKey`: String): StorageResult?
+    fun `copyData`(`sourceKey`: String, `targetKey`: String): StorageResult?
+    fun `readData`(`key`: String): StorageResult?
+    fun `setClient`(`clientId`: UInt)
+    fun `writeData`(`key`: String, `value`: String): StorageResult?
+    companion object
+}
+
+class StorageService(
+    pointer: Pointer
+) : FFIObject(pointer), StorageServiceInterface {
+    constructor() :
+        this(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_constructor_storageservice_new(_status)
+})
+
+    /**
+     * Disconnect the object from the underlying Rust object.
+     *
+     * It can be called more than once, but once called, interacting with the object
+     * causes an `IllegalStateException`.
+     *
+     * Clients **must** call this method once done with the object, or cause a memory leak.
+     */
+    override protected fun freeRustArcPtr() {
+        rustCall() { status ->
+            _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_free_storageservice(this.pointer, status)
+        }
+    }
+
+    override fun `backupMultipleKeys`(`keys`: List<String>, `backupKey`: String): StorageResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_storageservice_backup_multiple_keys(it,
+        FfiConverterSequenceString.lower(`keys`),FfiConverterString.lower(`backupKey`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeStorageResult.lift(it)
+        }
+    
+    override fun `copyData`(`sourceKey`: String, `targetKey`: String): StorageResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_storageservice_copy_data(it,
+        FfiConverterString.lower(`sourceKey`),FfiConverterString.lower(`targetKey`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeStorageResult.lift(it)
+        }
+    
+    override fun `readData`(`key`: String): StorageResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_storageservice_read_data(it,
+        FfiConverterString.lower(`key`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeStorageResult.lift(it)
+        }
+    
+    override fun `setClient`(`clientId`: UInt) =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_storageservice_set_client(it,
+        FfiConverterUInt.lower(`clientId`),
+        _status)
+}
+        }
+    
+    
+    override fun `writeData`(`key`: String, `value`: String): StorageResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_storageservice_write_data(it,
+        FfiConverterString.lower(`key`),FfiConverterString.lower(`value`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeStorageResult.lift(it)
+        }
+    
+    
+
+    
+    companion object
+    
+}
+
+public object FfiConverterTypeStorageService: FfiConverter<StorageService, Pointer> {
+    override fun lower(value: StorageService): Pointer = value.callWithPointer { it }
+
+    override fun lift(value: Pointer): StorageService {
+        return StorageService(value)
+    }
+
+    override fun read(buf: ByteBuffer): StorageService {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: StorageService) = 8
+
+    override fun write(value: StorageService, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+
+
+public interface UserServiceInterface {
+    
+    fun `calculateUserScore`(`userId`: UInt, `metrics`: List<Double>): Double?
+    fun `getUser`(`userId`: UInt): UserInfo?
+    fun `sendNotification`(`userId`: UInt, `message`: String)
+    fun `setManager`(`managerId`: UInt)
+    fun `updateUserPreferences`(`userId`: UInt, `preferences`: UserPreferences): Boolean?
+    companion object
+}
+
+class UserService(
+    pointer: Pointer
+) : FFIObject(pointer), UserServiceInterface {
+    constructor() :
+        this(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_constructor_userservice_new(_status)
+})
+
+    /**
+     * Disconnect the object from the underlying Rust object.
+     *
+     * It can be called more than once, but once called, interacting with the object
+     * causes an `IllegalStateException`.
+     *
+     * Clients **must** call this method once done with the object, or cause a memory leak.
+     */
+    override protected fun freeRustArcPtr() {
+        rustCall() { status ->
+            _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_free_userservice(this.pointer, status)
+        }
+    }
+
+    override fun `calculateUserScore`(`userId`: UInt, `metrics`: List<Double>): Double? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_userservice_calculate_user_score(it,
+        FfiConverterUInt.lower(`userId`),FfiConverterSequenceDouble.lower(`metrics`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalDouble.lift(it)
+        }
+    
+    override fun `getUser`(`userId`: UInt): UserInfo? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_userservice_get_user(it,
+        FfiConverterUInt.lower(`userId`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeUserInfo.lift(it)
+        }
+    
+    override fun `sendNotification`(`userId`: UInt, `message`: String) =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_userservice_send_notification(it,
+        FfiConverterUInt.lower(`userId`),FfiConverterString.lower(`message`),
+        _status)
+}
+        }
+    
+    
+    override fun `setManager`(`managerId`: UInt) =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_userservice_set_manager(it,
+        FfiConverterUInt.lower(`managerId`),
+        _status)
+}
+        }
+    
+    
+    override fun `updateUserPreferences`(`userId`: UInt, `preferences`: UserPreferences): Boolean? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_userservice_update_user_preferences(it,
+        FfiConverterUInt.lower(`userId`),FfiConverterTypeUserPreferences.lower(`preferences`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalBoolean.lift(it)
+        }
+    
+    
+
+    
+    companion object
+    
+}
+
+public object FfiConverterTypeUserService: FfiConverter<UserService, Pointer> {
+    override fun lower(value: UserService): Pointer = value.callWithPointer { it }
+
+    override fun lift(value: Pointer): UserService {
+        return UserService(value)
+    }
+
+    override fun read(buf: ByteBuffer): UserService {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: UserService) = 8
+
+    override fun write(value: UserService, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+
+
+public interface WebSocketServiceInterface {
+    
+    fun `pingPong`(): WebSocketResult?
+    fun `readMessage`(): WebSocketResult?
+    fun `sendAndRead`(`message`: String): WebSocketResult?
+    fun `sendBatchMessages`(`messages`: List<String>): List<WebSocketResult>
+    fun `sendMessage`(`message`: String): WebSocketResult?
+    fun `setClient`(`clientId`: UInt)
+    companion object
+}
+
+class WebSocketService(
+    pointer: Pointer
+) : FFIObject(pointer), WebSocketServiceInterface {
+    constructor() :
+        this(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_constructor_websocketservice_new(_status)
+})
+
+    /**
+     * Disconnect the object from the underlying Rust object.
+     *
+     * It can be called more than once, but once called, interacting with the object
+     * causes an `IllegalStateException`.
+     *
+     * Clients **must** call this method once done with the object, or cause a memory leak.
+     */
+    override protected fun freeRustArcPtr() {
+        rustCall() { status ->
+            _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_free_websocketservice(this.pointer, status)
+        }
+    }
+
+    override fun `pingPong`(): WebSocketResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_websocketservice_ping_pong(it,
+        
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeWebSocketResult.lift(it)
+        }
+    
+    override fun `readMessage`(): WebSocketResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_websocketservice_read_message(it,
+        
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeWebSocketResult.lift(it)
+        }
+    
+    override fun `sendAndRead`(`message`: String): WebSocketResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_websocketservice_send_and_read(it,
+        FfiConverterString.lower(`message`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeWebSocketResult.lift(it)
+        }
+    
+    override fun `sendBatchMessages`(`messages`: List<String>): List<WebSocketResult> =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_websocketservice_send_batch_messages(it,
+        FfiConverterSequenceString.lower(`messages`),
+        _status)
+}
+        }.let {
+            FfiConverterSequenceTypeWebSocketResult.lift(it)
+        }
+    
+    override fun `sendMessage`(`message`: String): WebSocketResult? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_websocketservice_send_message(it,
+        FfiConverterString.lower(`message`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalTypeWebSocketResult.lift(it)
+        }
+    
+    override fun `setClient`(`clientId`: UInt) =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_websocketservice_set_client(it,
+        FfiConverterUInt.lower(`clientId`),
+        _status)
+}
+        }
+    
+    
+    
+
+    
+    companion object
+    
+}
+
+public object FfiConverterTypeWebSocketService: FfiConverter<WebSocketService, Pointer> {
+    override fun lower(value: WebSocketService): Pointer = value.callWithPointer { it }
+
+    override fun lift(value: Pointer): WebSocketService {
+        return WebSocketService(value)
+    }
+
+    override fun read(buf: ByteBuffer): WebSocketService {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: WebSocketService) = 8
+
+    override fun write(value: WebSocketService, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+
+
+data class ProcessResult (
+    var `success`: Boolean, 
+    var `result`: String, 
+    var `metadata`: String, 
+    var `timestamp`: ULong
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeProcessResult: FfiConverterRustBuffer<ProcessResult> {
+    override fun read(buf: ByteBuffer): ProcessResult {
+        return ProcessResult(
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ProcessResult) = (
+            FfiConverterBoolean.allocationSize(value.`success`) +
+            FfiConverterString.allocationSize(value.`result`) +
+            FfiConverterString.allocationSize(value.`metadata`) +
+            FfiConverterULong.allocationSize(value.`timestamp`)
+    )
+
+    override fun write(value: ProcessResult, buf: ByteBuffer) {
+            FfiConverterBoolean.write(value.`success`, buf)
+            FfiConverterString.write(value.`result`, buf)
+            FfiConverterString.write(value.`metadata`, buf)
+            FfiConverterULong.write(value.`timestamp`, buf)
+    }
+}
+
+
+
+
+data class StorageResult (
+    var `success`: Boolean, 
+    var `data`: String, 
+    var `errorMessage`: String, 
+    var `timestamp`: ULong
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeStorageResult: FfiConverterRustBuffer<StorageResult> {
+    override fun read(buf: ByteBuffer): StorageResult {
+        return StorageResult(
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: StorageResult) = (
+            FfiConverterBoolean.allocationSize(value.`success`) +
+            FfiConverterString.allocationSize(value.`data`) +
+            FfiConverterString.allocationSize(value.`errorMessage`) +
+            FfiConverterULong.allocationSize(value.`timestamp`)
+    )
+
+    override fun write(value: StorageResult, buf: ByteBuffer) {
+            FfiConverterBoolean.write(value.`success`, buf)
+            FfiConverterString.write(value.`data`, buf)
+            FfiConverterString.write(value.`errorMessage`, buf)
+            FfiConverterULong.write(value.`timestamp`, buf)
+    }
+}
+
+
+
+
+data class UserInfo (
+    var `id`: UInt, 
+    var `name`: String, 
+    var `email`: String, 
+    var `level`: UInt
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeUserInfo: FfiConverterRustBuffer<UserInfo> {
+    override fun read(buf: ByteBuffer): UserInfo {
+        return UserInfo(
+            FfiConverterUInt.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterUInt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: UserInfo) = (
+            FfiConverterUInt.allocationSize(value.`id`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`email`) +
+            FfiConverterUInt.allocationSize(value.`level`)
+    )
+
+    override fun write(value: UserInfo, buf: ByteBuffer) {
+            FfiConverterUInt.write(value.`id`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`email`, buf)
+            FfiConverterUInt.write(value.`level`, buf)
+    }
+}
+
+
+
+
+data class UserPreferences (
+    var `theme`: String, 
+    var `notificationsEnabled`: Boolean, 
+    var `language`: String, 
+    var `autoSave`: Boolean
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeUserPreferences: FfiConverterRustBuffer<UserPreferences> {
+    override fun read(buf: ByteBuffer): UserPreferences {
+        return UserPreferences(
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: UserPreferences) = (
+            FfiConverterString.allocationSize(value.`theme`) +
+            FfiConverterBoolean.allocationSize(value.`notificationsEnabled`) +
+            FfiConverterString.allocationSize(value.`language`) +
+            FfiConverterBoolean.allocationSize(value.`autoSave`)
+    )
+
+    override fun write(value: UserPreferences, buf: ByteBuffer) {
+            FfiConverterString.write(value.`theme`, buf)
+            FfiConverterBoolean.write(value.`notificationsEnabled`, buf)
+            FfiConverterString.write(value.`language`, buf)
+            FfiConverterBoolean.write(value.`autoSave`, buf)
+    }
+}
+
+
+
+
+data class WebSocketResult (
+    var `success`: Boolean, 
+    var `message`: String, 
+    var `errorMessage`: String, 
+    var `connectionStatus`: String, 
+    var `timestamp`: ULong
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeWebSocketResult: FfiConverterRustBuffer<WebSocketResult> {
+    override fun read(buf: ByteBuffer): WebSocketResult {
+        return WebSocketResult(
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: WebSocketResult) = (
+            FfiConverterBoolean.allocationSize(value.`success`) +
+            FfiConverterString.allocationSize(value.`message`) +
+            FfiConverterString.allocationSize(value.`errorMessage`) +
+            FfiConverterString.allocationSize(value.`connectionStatus`) +
+            FfiConverterULong.allocationSize(value.`timestamp`)
+    )
+
+    override fun write(value: WebSocketResult, buf: ByteBuffer) {
+            FfiConverterBoolean.write(value.`success`, buf)
+            FfiConverterString.write(value.`message`, buf)
+            FfiConverterString.write(value.`errorMessage`, buf)
+            FfiConverterString.write(value.`connectionStatus`, buf)
+            FfiConverterULong.write(value.`timestamp`, buf)
+    }
+}
+
+
+
+
 internal typealias Handle = Long
 internal class ConcurrentHandleMap<T>(
     private val leftMap: MutableMap<Handle, T> = mutableMapOf(),
@@ -1089,6 +2141,194 @@ public abstract class FfiConverterCallbackInterface<CallbackInterface>(
         buf.putLong(lower(value))
     }
 }
+
+// Declaration and FfiConverters for DataProcessor Callback Interface
+
+public interface DataProcessor {
+    fun `processItem`(`item`: String): ProcessResult
+    fun `validateInput`(`input`: String): Boolean
+    fun `transformData`(`data`: List<String>): List<String>
+    fun `getProcessorName`(): String
+    
+    companion object
+}
+
+// The ForeignCallback that is passed to Rust.
+internal class ForeignCallbackTypeDataProcessor : ForeignCallback {
+    @Suppress("TooGenericExceptionCaught")
+    override fun callback(handle: Handle, method: Int, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val cb = FfiConverterTypeDataProcessor.lift(handle)
+        return when (method) {
+            IDX_CALLBACK_FREE -> {
+                FfiConverterTypeDataProcessor.drop(handle)
+                // Successful return
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                UNIFFI_CALLBACK_SUCCESS
+            }
+            1 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeProcessItem`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            2 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeValidateInput`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            3 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeTransformData`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            4 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeGetProcessorName`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            
+            else -> {
+                // An unexpected error happened.
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                try {
+                    // Try to serialize the error into a string
+                    outBuf.setValue(FfiConverterString.lower("Invalid Callback index"))
+                } catch (e: Throwable) {
+                    // If that fails, then it's time to give up and just return
+                }
+                UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        }
+    }
+
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeProcessItem`(kotlinCallbackInterface: DataProcessor, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`processItem`(
+                FfiConverterString.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterTypeProcessResult.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeValidateInput`(kotlinCallbackInterface: DataProcessor, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`validateInput`(
+                FfiConverterString.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterBoolean.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeTransformData`(kotlinCallbackInterface: DataProcessor, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`transformData`(
+                FfiConverterSequenceString.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterSequenceString.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeGetProcessorName`(kotlinCallbackInterface: DataProcessor, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`getProcessorName`(
+            )
+            outBuf.setValue(FfiConverterString.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+}
+
+// The ffiConverter which transforms the Callbacks in to Handles to pass to Rust.
+public object FfiConverterTypeDataProcessor: FfiConverterCallbackInterface<DataProcessor>(
+    foreignCallback = ForeignCallbackTypeDataProcessor()
+) {
+    override fun register(lib: _UniFFILib) {
+        rustCall() { status ->
+            lib.uniffi_uniffi_callback_demo_fn_init_callback_dataprocessor(this.foreignCallback, status)
+        }
+    }
+}
+
+
+
+
+
 
 // Declaration and FfiConverters for EventCallback Callback Interface
 
@@ -1247,6 +2487,445 @@ public object FfiConverterTypeEventCallback: FfiConverterCallbackInterface<Event
 
 
 
+
+
+// Declaration and FfiConverters for StorageClient Callback Interface
+
+public interface StorageClient {
+    fun `read`(`key`: String): StorageResult
+    fun `write`(`key`: String, `value`: String): StorageResult
+    
+    companion object
+}
+
+// The ForeignCallback that is passed to Rust.
+internal class ForeignCallbackTypeStorageClient : ForeignCallback {
+    @Suppress("TooGenericExceptionCaught")
+    override fun callback(handle: Handle, method: Int, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val cb = FfiConverterTypeStorageClient.lift(handle)
+        return when (method) {
+            IDX_CALLBACK_FREE -> {
+                FfiConverterTypeStorageClient.drop(handle)
+                // Successful return
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                UNIFFI_CALLBACK_SUCCESS
+            }
+            1 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeRead`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            2 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeWrite`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            
+            else -> {
+                // An unexpected error happened.
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                try {
+                    // Try to serialize the error into a string
+                    outBuf.setValue(FfiConverterString.lower("Invalid Callback index"))
+                } catch (e: Throwable) {
+                    // If that fails, then it's time to give up and just return
+                }
+                UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        }
+    }
+
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeRead`(kotlinCallbackInterface: StorageClient, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`read`(
+                FfiConverterString.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterTypeStorageResult.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeWrite`(kotlinCallbackInterface: StorageClient, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`write`(
+                FfiConverterString.read(argsBuf)
+                , 
+                FfiConverterString.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterTypeStorageResult.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+}
+
+// The ffiConverter which transforms the Callbacks in to Handles to pass to Rust.
+public object FfiConverterTypeStorageClient: FfiConverterCallbackInterface<StorageClient>(
+    foreignCallback = ForeignCallbackTypeStorageClient()
+) {
+    override fun register(lib: _UniFFILib) {
+        rustCall() { status ->
+            lib.uniffi_uniffi_callback_demo_fn_init_callback_storageclient(this.foreignCallback, status)
+        }
+    }
+}
+
+
+
+
+
+
+// Declaration and FfiConverters for UserProfileManager Callback Interface
+
+public interface UserProfileManager {
+    fun `getUserInfo`(`userId`: UInt): UserInfo
+    fun `updatePreferences`(`userId`: UInt, `preferences`: UserPreferences): Boolean
+    fun `calculateScore`(`userId`: UInt, `metrics`: List<Double>): Double
+    fun `notifyUser`(`userId`: UInt, `message`: String)
+    
+    companion object
+}
+
+// The ForeignCallback that is passed to Rust.
+internal class ForeignCallbackTypeUserProfileManager : ForeignCallback {
+    @Suppress("TooGenericExceptionCaught")
+    override fun callback(handle: Handle, method: Int, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val cb = FfiConverterTypeUserProfileManager.lift(handle)
+        return when (method) {
+            IDX_CALLBACK_FREE -> {
+                FfiConverterTypeUserProfileManager.drop(handle)
+                // Successful return
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                UNIFFI_CALLBACK_SUCCESS
+            }
+            1 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeGetUserInfo`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            2 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeUpdatePreferences`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            3 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeCalculateScore`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            4 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeNotifyUser`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            
+            else -> {
+                // An unexpected error happened.
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                try {
+                    // Try to serialize the error into a string
+                    outBuf.setValue(FfiConverterString.lower("Invalid Callback index"))
+                } catch (e: Throwable) {
+                    // If that fails, then it's time to give up and just return
+                }
+                UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        }
+    }
+
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeGetUserInfo`(kotlinCallbackInterface: UserProfileManager, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`getUserInfo`(
+                FfiConverterUInt.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterTypeUserInfo.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeUpdatePreferences`(kotlinCallbackInterface: UserProfileManager, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`updatePreferences`(
+                FfiConverterUInt.read(argsBuf)
+                , 
+                FfiConverterTypeUserPreferences.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterBoolean.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeCalculateScore`(kotlinCallbackInterface: UserProfileManager, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`calculateScore`(
+                FfiConverterUInt.read(argsBuf)
+                , 
+                FfiConverterSequenceDouble.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterDouble.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeNotifyUser`(kotlinCallbackInterface: UserProfileManager, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            kotlinCallbackInterface.`notifyUser`(
+                FfiConverterUInt.read(argsBuf), 
+                FfiConverterString.read(argsBuf)
+            )
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+}
+
+// The ffiConverter which transforms the Callbacks in to Handles to pass to Rust.
+public object FfiConverterTypeUserProfileManager: FfiConverterCallbackInterface<UserProfileManager>(
+    foreignCallback = ForeignCallbackTypeUserProfileManager()
+) {
+    override fun register(lib: _UniFFILib) {
+        rustCall() { status ->
+            lib.uniffi_uniffi_callback_demo_fn_init_callback_userprofilemanager(this.foreignCallback, status)
+        }
+    }
+}
+
+
+
+
+
+
+// Declaration and FfiConverters for WebSocketClient Callback Interface
+
+public interface WebSocketClient {
+    fun `send`(`message`: String): WebSocketResult
+    fun `read`(): WebSocketResult
+    
+    companion object
+}
+
+// The ForeignCallback that is passed to Rust.
+internal class ForeignCallbackTypeWebSocketClient : ForeignCallback {
+    @Suppress("TooGenericExceptionCaught")
+    override fun callback(handle: Handle, method: Int, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val cb = FfiConverterTypeWebSocketClient.lift(handle)
+        return when (method) {
+            IDX_CALLBACK_FREE -> {
+                FfiConverterTypeWebSocketClient.drop(handle)
+                // Successful return
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                UNIFFI_CALLBACK_SUCCESS
+            }
+            1 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeSend`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            2 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeRead`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            
+            else -> {
+                // An unexpected error happened.
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+                try {
+                    // Try to serialize the error into a string
+                    outBuf.setValue(FfiConverterString.lower("Invalid Callback index"))
+                } catch (e: Throwable) {
+                    // If that fails, then it's time to give up and just return
+                }
+                UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        }
+    }
+
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeSend`(kotlinCallbackInterface: WebSocketClient, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`send`(
+                FfiConverterString.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterTypeWebSocketResult.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeRead`(kotlinCallbackInterface: WebSocketClient, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`read`(
+            )
+            outBuf.setValue(FfiConverterTypeWebSocketResult.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
+}
+
+// The ffiConverter which transforms the Callbacks in to Handles to pass to Rust.
+public object FfiConverterTypeWebSocketClient: FfiConverterCallbackInterface<WebSocketClient>(
+    foreignCallback = ForeignCallbackTypeWebSocketClient()
+) {
+    override fun register(lib: _UniFFILib) {
+        rustCall() { status ->
+            lib.uniffi_uniffi_callback_demo_fn_init_callback_websocketclient(this.foreignCallback, status)
+        }
+    }
+}
+
+
+
+
 public object FfiConverterOptionalInt: FfiConverterRustBuffer<Int?> {
     override fun read(buf: ByteBuffer): Int? {
         if (buf.get().toInt() == 0) {
@@ -1269,6 +2948,64 @@ public object FfiConverterOptionalInt: FfiConverterRustBuffer<Int?> {
         } else {
             buf.put(1)
             FfiConverterInt.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalDouble: FfiConverterRustBuffer<Double?> {
+    override fun read(buf: ByteBuffer): Double? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterDouble.read(buf)
+    }
+
+    override fun allocationSize(value: Double?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterDouble.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Double?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterDouble.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalBoolean: FfiConverterRustBuffer<Boolean?> {
+    override fun read(buf: ByteBuffer): Boolean? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterBoolean.read(buf)
+    }
+
+    override fun allocationSize(value: Boolean?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterBoolean.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Boolean?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterBoolean.write(value, buf)
         }
     }
 }
@@ -1302,6 +3039,226 @@ public object FfiConverterOptionalString: FfiConverterRustBuffer<String?> {
     }
 }
 
+
+
+
+public object FfiConverterOptionalTypeProcessResult: FfiConverterRustBuffer<ProcessResult?> {
+    override fun read(buf: ByteBuffer): ProcessResult? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeProcessResult.read(buf)
+    }
+
+    override fun allocationSize(value: ProcessResult?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterTypeProcessResult.allocationSize(value)
+        }
+    }
+
+    override fun write(value: ProcessResult?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeProcessResult.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalTypeStorageResult: FfiConverterRustBuffer<StorageResult?> {
+    override fun read(buf: ByteBuffer): StorageResult? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeStorageResult.read(buf)
+    }
+
+    override fun allocationSize(value: StorageResult?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterTypeStorageResult.allocationSize(value)
+        }
+    }
+
+    override fun write(value: StorageResult?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeStorageResult.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalTypeUserInfo: FfiConverterRustBuffer<UserInfo?> {
+    override fun read(buf: ByteBuffer): UserInfo? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeUserInfo.read(buf)
+    }
+
+    override fun allocationSize(value: UserInfo?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterTypeUserInfo.allocationSize(value)
+        }
+    }
+
+    override fun write(value: UserInfo?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeUserInfo.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalTypeWebSocketResult: FfiConverterRustBuffer<WebSocketResult?> {
+    override fun read(buf: ByteBuffer): WebSocketResult? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeWebSocketResult.read(buf)
+    }
+
+    override fun allocationSize(value: WebSocketResult?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterTypeWebSocketResult.allocationSize(value)
+        }
+    }
+
+    override fun write(value: WebSocketResult?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeWebSocketResult.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalSequenceString: FfiConverterRustBuffer<List<String>?> {
+    override fun read(buf: ByteBuffer): List<String>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceString.read(buf)
+    }
+
+    override fun allocationSize(value: List<String>?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterSequenceString.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<String>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceDouble: FfiConverterRustBuffer<List<Double>> {
+    override fun read(buf: ByteBuffer): List<Double> {
+        val len = buf.getInt()
+        return List<Double>(len) {
+            FfiConverterDouble.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Double>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterDouble.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Double>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterDouble.write(it, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceString: FfiConverterRustBuffer<List<String>> {
+    override fun read(buf: ByteBuffer): List<String> {
+        val len = buf.getInt()
+        return List<String>(len) {
+            FfiConverterString.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<String>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterString.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<String>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterString.write(it, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceTypeWebSocketResult: FfiConverterRustBuffer<List<WebSocketResult>> {
+    override fun read(buf: ByteBuffer): List<WebSocketResult> {
+        val len = buf.getInt()
+        return List<WebSocketResult>(len) {
+            FfiConverterTypeWebSocketResult.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<WebSocketResult>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterTypeWebSocketResult.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<WebSocketResult>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterTypeWebSocketResult.write(it, buf)
+        }
+    }
+}
+
 fun `createTestData`(`size`: UInt): ByteArray {
     return FfiConverterByteArray.lift(
     rustCall() { _status ->
@@ -1326,6 +3283,38 @@ fun `registerCallback`(`callback`: EventCallback): UInt {
 }
 
 
+fun `registerDataProcessor`(`processor`: DataProcessor): UInt {
+    return FfiConverterUInt.lift(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_register_data_processor(FfiConverterTypeDataProcessor.lower(`processor`),_status)
+})
+}
+
+
+fun `registerStorageClient`(`client`: StorageClient): UInt {
+    return FfiConverterUInt.lift(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_register_storage_client(FfiConverterTypeStorageClient.lower(`client`),_status)
+})
+}
+
+
+fun `registerUserManager`(`manager`: UserProfileManager): UInt {
+    return FfiConverterUInt.lift(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_register_user_manager(FfiConverterTypeUserProfileManager.lower(`manager`),_status)
+})
+}
+
+
+fun `registerWebsocketClient`(`client`: WebSocketClient): UInt {
+    return FfiConverterUInt.lift(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_register_websocket_client(FfiConverterTypeWebSocketClient.lower(`client`),_status)
+})
+}
+
+
 fun `setServiceCallback`(`service`: CallbackService, `callbackId`: UInt) =
     
     rustCall() { _status ->
@@ -1338,6 +3327,38 @@ fun `unregisterCallback`(`callbackId`: UInt) =
     
     rustCall() { _status ->
     _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_unregister_callback(FfiConverterUInt.lower(`callbackId`),_status)
+}
+
+
+
+fun `unregisterDataProcessor`(`processorId`: UInt) =
+    
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_unregister_data_processor(FfiConverterUInt.lower(`processorId`),_status)
+}
+
+
+
+fun `unregisterStorageClient`(`clientId`: UInt) =
+    
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_unregister_storage_client(FfiConverterUInt.lower(`clientId`),_status)
+}
+
+
+
+fun `unregisterUserManager`(`managerId`: UInt) =
+    
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_unregister_user_manager(FfiConverterUInt.lower(`managerId`),_status)
+}
+
+
+
+fun `unregisterWebsocketClient`(`clientId`: UInt) =
+    
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_func_unregister_websocket_client(FfiConverterUInt.lower(`clientId`),_status)
 }
 
 

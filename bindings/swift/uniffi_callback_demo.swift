@@ -323,6 +323,53 @@ fileprivate struct FfiConverterInt32: FfiConverterPrimitive {
     }
 }
 
+fileprivate struct FfiConverterUInt64: FfiConverterPrimitive {
+    typealias FfiType = UInt64
+    typealias SwiftType = UInt64
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> UInt64 {
+        return try lift(readInt(&buf))
+    }
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(value))
+    }
+}
+
+fileprivate struct FfiConverterDouble: FfiConverterPrimitive {
+    typealias FfiType = Double
+    typealias SwiftType = Double
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Double {
+        return try lift(readDouble(&buf))
+    }
+
+    public static func write(_ value: Double, into buf: inout [UInt8]) {
+        writeDouble(&buf, lower(value))
+    }
+}
+
+fileprivate struct FfiConverterBool : FfiConverter {
+    typealias FfiType = Int8
+    typealias SwiftType = Bool
+
+    public static func lift(_ value: Int8) throws -> Bool {
+        return value != 0
+    }
+
+    public static func lower(_ value: Bool) -> Int8 {
+        return value ? 1 : 0
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Bool {
+        return try lift(readInt(&buf))
+    }
+
+    public static func write(_ value: Bool, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(value))
+    }
+}
+
 fileprivate struct FfiConverterString: FfiConverter {
     typealias SwiftType = String
     typealias FfiType = RustBuffer
@@ -507,6 +554,911 @@ public func FfiConverterTypeCallbackService_lower(_ value: CallbackService) -> U
     return FfiConverterTypeCallbackService.lower(value)
 }
 
+
+public protocol DataProcessingServiceProtocol {
+    func batchTransform(data: [String])   -> [String]?
+    func getProcessorInfo()   -> String?
+    func processSingleItem(item: String)   -> ProcessResult?
+    func setProcessor(processorId: UInt32)  
+    func validateAndProcess(input: String)   -> ProcessResult?
+    
+}
+
+public class DataProcessingService: DataProcessingServiceProtocol {
+    fileprivate let pointer: UnsafeMutableRawPointer
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+    required init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+    public convenience init()  {
+        self.init(unsafeFromRawPointer: try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_constructor_dataprocessingservice_new($0)
+})
+    }
+
+    deinit {
+        try! rustCall { uniffi_uniffi_callback_demo_fn_free_dataprocessingservice(pointer, $0) }
+    }
+
+    
+
+    
+    
+
+    public func batchTransform(data: [String])  -> [String]? {
+        return try!  FfiConverterOptionSequenceString.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_batch_transform(self.pointer, 
+        FfiConverterSequenceString.lower(data),$0
+    )
+}
+        )
+    }
+
+    public func getProcessorInfo()  -> String? {
+        return try!  FfiConverterOptionString.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_get_processor_info(self.pointer, $0
+    )
+}
+        )
+    }
+
+    public func processSingleItem(item: String)  -> ProcessResult? {
+        return try!  FfiConverterOptionTypeProcessResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_process_single_item(self.pointer, 
+        FfiConverterString.lower(item),$0
+    )
+}
+        )
+    }
+
+    public func setProcessor(processorId: UInt32)  {
+        try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_set_processor(self.pointer, 
+        FfiConverterUInt32.lower(processorId),$0
+    )
+}
+    }
+
+    public func validateAndProcess(input: String)  -> ProcessResult? {
+        return try!  FfiConverterOptionTypeProcessResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_dataprocessingservice_validate_and_process(self.pointer, 
+        FfiConverterString.lower(input),$0
+    )
+}
+        )
+    }
+}
+
+public struct FfiConverterTypeDataProcessingService: FfiConverter {
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = DataProcessingService
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> DataProcessingService {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: DataProcessingService, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> DataProcessingService {
+        return DataProcessingService(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: DataProcessingService) -> UnsafeMutableRawPointer {
+        return value.pointer
+    }
+}
+
+
+public func FfiConverterTypeDataProcessingService_lift(_ pointer: UnsafeMutableRawPointer) throws -> DataProcessingService {
+    return try FfiConverterTypeDataProcessingService.lift(pointer)
+}
+
+public func FfiConverterTypeDataProcessingService_lower(_ value: DataProcessingService) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeDataProcessingService.lower(value)
+}
+
+
+public protocol StorageServiceProtocol {
+    func backupMultipleKeys(keys: [String], backupKey: String)   -> StorageResult?
+    func copyData(sourceKey: String, targetKey: String)   -> StorageResult?
+    func readData(key: String)   -> StorageResult?
+    func setClient(clientId: UInt32)  
+    func writeData(key: String, value: String)   -> StorageResult?
+    
+}
+
+public class StorageService: StorageServiceProtocol {
+    fileprivate let pointer: UnsafeMutableRawPointer
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+    required init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+    public convenience init()  {
+        self.init(unsafeFromRawPointer: try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_constructor_storageservice_new($0)
+})
+    }
+
+    deinit {
+        try! rustCall { uniffi_uniffi_callback_demo_fn_free_storageservice(pointer, $0) }
+    }
+
+    
+
+    
+    
+
+    public func backupMultipleKeys(keys: [String], backupKey: String)  -> StorageResult? {
+        return try!  FfiConverterOptionTypeStorageResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_storageservice_backup_multiple_keys(self.pointer, 
+        FfiConverterSequenceString.lower(keys),
+        FfiConverterString.lower(backupKey),$0
+    )
+}
+        )
+    }
+
+    public func copyData(sourceKey: String, targetKey: String)  -> StorageResult? {
+        return try!  FfiConverterOptionTypeStorageResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_storageservice_copy_data(self.pointer, 
+        FfiConverterString.lower(sourceKey),
+        FfiConverterString.lower(targetKey),$0
+    )
+}
+        )
+    }
+
+    public func readData(key: String)  -> StorageResult? {
+        return try!  FfiConverterOptionTypeStorageResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_storageservice_read_data(self.pointer, 
+        FfiConverterString.lower(key),$0
+    )
+}
+        )
+    }
+
+    public func setClient(clientId: UInt32)  {
+        try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_storageservice_set_client(self.pointer, 
+        FfiConverterUInt32.lower(clientId),$0
+    )
+}
+    }
+
+    public func writeData(key: String, value: String)  -> StorageResult? {
+        return try!  FfiConverterOptionTypeStorageResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_storageservice_write_data(self.pointer, 
+        FfiConverterString.lower(key),
+        FfiConverterString.lower(value),$0
+    )
+}
+        )
+    }
+}
+
+public struct FfiConverterTypeStorageService: FfiConverter {
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = StorageService
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> StorageService {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: StorageService, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> StorageService {
+        return StorageService(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: StorageService) -> UnsafeMutableRawPointer {
+        return value.pointer
+    }
+}
+
+
+public func FfiConverterTypeStorageService_lift(_ pointer: UnsafeMutableRawPointer) throws -> StorageService {
+    return try FfiConverterTypeStorageService.lift(pointer)
+}
+
+public func FfiConverterTypeStorageService_lower(_ value: StorageService) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeStorageService.lower(value)
+}
+
+
+public protocol UserServiceProtocol {
+    func calculateUserScore(userId: UInt32, metrics: [Double])   -> Double?
+    func getUser(userId: UInt32)   -> UserInfo?
+    func sendNotification(userId: UInt32, message: String)  
+    func setManager(managerId: UInt32)  
+    func updateUserPreferences(userId: UInt32, preferences: UserPreferences)   -> Bool?
+    
+}
+
+public class UserService: UserServiceProtocol {
+    fileprivate let pointer: UnsafeMutableRawPointer
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+    required init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+    public convenience init()  {
+        self.init(unsafeFromRawPointer: try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_constructor_userservice_new($0)
+})
+    }
+
+    deinit {
+        try! rustCall { uniffi_uniffi_callback_demo_fn_free_userservice(pointer, $0) }
+    }
+
+    
+
+    
+    
+
+    public func calculateUserScore(userId: UInt32, metrics: [Double])  -> Double? {
+        return try!  FfiConverterOptionDouble.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_userservice_calculate_user_score(self.pointer, 
+        FfiConverterUInt32.lower(userId),
+        FfiConverterSequenceDouble.lower(metrics),$0
+    )
+}
+        )
+    }
+
+    public func getUser(userId: UInt32)  -> UserInfo? {
+        return try!  FfiConverterOptionTypeUserInfo.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_userservice_get_user(self.pointer, 
+        FfiConverterUInt32.lower(userId),$0
+    )
+}
+        )
+    }
+
+    public func sendNotification(userId: UInt32, message: String)  {
+        try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_userservice_send_notification(self.pointer, 
+        FfiConverterUInt32.lower(userId),
+        FfiConverterString.lower(message),$0
+    )
+}
+    }
+
+    public func setManager(managerId: UInt32)  {
+        try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_userservice_set_manager(self.pointer, 
+        FfiConverterUInt32.lower(managerId),$0
+    )
+}
+    }
+
+    public func updateUserPreferences(userId: UInt32, preferences: UserPreferences)  -> Bool? {
+        return try!  FfiConverterOptionBool.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_userservice_update_user_preferences(self.pointer, 
+        FfiConverterUInt32.lower(userId),
+        FfiConverterTypeUserPreferences.lower(preferences),$0
+    )
+}
+        )
+    }
+}
+
+public struct FfiConverterTypeUserService: FfiConverter {
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = UserService
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> UserService {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: UserService, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> UserService {
+        return UserService(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: UserService) -> UnsafeMutableRawPointer {
+        return value.pointer
+    }
+}
+
+
+public func FfiConverterTypeUserService_lift(_ pointer: UnsafeMutableRawPointer) throws -> UserService {
+    return try FfiConverterTypeUserService.lift(pointer)
+}
+
+public func FfiConverterTypeUserService_lower(_ value: UserService) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeUserService.lower(value)
+}
+
+
+public protocol WebSocketServiceProtocol {
+    func pingPong()   -> WebSocketResult?
+    func readMessage()   -> WebSocketResult?
+    func sendAndRead(message: String)   -> WebSocketResult?
+    func sendBatchMessages(messages: [String])   -> [WebSocketResult]
+    func sendMessage(message: String)   -> WebSocketResult?
+    func setClient(clientId: UInt32)  
+    
+}
+
+public class WebSocketService: WebSocketServiceProtocol {
+    fileprivate let pointer: UnsafeMutableRawPointer
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+    required init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+    public convenience init()  {
+        self.init(unsafeFromRawPointer: try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_constructor_websocketservice_new($0)
+})
+    }
+
+    deinit {
+        try! rustCall { uniffi_uniffi_callback_demo_fn_free_websocketservice(pointer, $0) }
+    }
+
+    
+
+    
+    
+
+    public func pingPong()  -> WebSocketResult? {
+        return try!  FfiConverterOptionTypeWebSocketResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_websocketservice_ping_pong(self.pointer, $0
+    )
+}
+        )
+    }
+
+    public func readMessage()  -> WebSocketResult? {
+        return try!  FfiConverterOptionTypeWebSocketResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_websocketservice_read_message(self.pointer, $0
+    )
+}
+        )
+    }
+
+    public func sendAndRead(message: String)  -> WebSocketResult? {
+        return try!  FfiConverterOptionTypeWebSocketResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_websocketservice_send_and_read(self.pointer, 
+        FfiConverterString.lower(message),$0
+    )
+}
+        )
+    }
+
+    public func sendBatchMessages(messages: [String])  -> [WebSocketResult] {
+        return try!  FfiConverterSequenceTypeWebSocketResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_websocketservice_send_batch_messages(self.pointer, 
+        FfiConverterSequenceString.lower(messages),$0
+    )
+}
+        )
+    }
+
+    public func sendMessage(message: String)  -> WebSocketResult? {
+        return try!  FfiConverterOptionTypeWebSocketResult.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_websocketservice_send_message(self.pointer, 
+        FfiConverterString.lower(message),$0
+    )
+}
+        )
+    }
+
+    public func setClient(clientId: UInt32)  {
+        try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_websocketservice_set_client(self.pointer, 
+        FfiConverterUInt32.lower(clientId),$0
+    )
+}
+    }
+}
+
+public struct FfiConverterTypeWebSocketService: FfiConverter {
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = WebSocketService
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> WebSocketService {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: WebSocketService, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> WebSocketService {
+        return WebSocketService(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: WebSocketService) -> UnsafeMutableRawPointer {
+        return value.pointer
+    }
+}
+
+
+public func FfiConverterTypeWebSocketService_lift(_ pointer: UnsafeMutableRawPointer) throws -> WebSocketService {
+    return try FfiConverterTypeWebSocketService.lift(pointer)
+}
+
+public func FfiConverterTypeWebSocketService_lower(_ value: WebSocketService) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeWebSocketService.lower(value)
+}
+
+
+public struct ProcessResult {
+    public var success: Bool
+    public var result: String
+    public var metadata: String
+    public var timestamp: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(success: Bool, result: String, metadata: String, timestamp: UInt64) {
+        self.success = success
+        self.result = result
+        self.metadata = metadata
+        self.timestamp = timestamp
+    }
+}
+
+
+extension ProcessResult: Equatable, Hashable {
+    public static func ==(lhs: ProcessResult, rhs: ProcessResult) -> Bool {
+        if lhs.success != rhs.success {
+            return false
+        }
+        if lhs.result != rhs.result {
+            return false
+        }
+        if lhs.metadata != rhs.metadata {
+            return false
+        }
+        if lhs.timestamp != rhs.timestamp {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(success)
+        hasher.combine(result)
+        hasher.combine(metadata)
+        hasher.combine(timestamp)
+    }
+}
+
+
+public struct FfiConverterTypeProcessResult: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ProcessResult {
+        return try ProcessResult(
+            success: FfiConverterBool.read(from: &buf), 
+            result: FfiConverterString.read(from: &buf), 
+            metadata: FfiConverterString.read(from: &buf), 
+            timestamp: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ProcessResult, into buf: inout [UInt8]) {
+        FfiConverterBool.write(value.success, into: &buf)
+        FfiConverterString.write(value.result, into: &buf)
+        FfiConverterString.write(value.metadata, into: &buf)
+        FfiConverterUInt64.write(value.timestamp, into: &buf)
+    }
+}
+
+
+public func FfiConverterTypeProcessResult_lift(_ buf: RustBuffer) throws -> ProcessResult {
+    return try FfiConverterTypeProcessResult.lift(buf)
+}
+
+public func FfiConverterTypeProcessResult_lower(_ value: ProcessResult) -> RustBuffer {
+    return FfiConverterTypeProcessResult.lower(value)
+}
+
+
+public struct StorageResult {
+    public var success: Bool
+    public var data: String
+    public var errorMessage: String
+    public var timestamp: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(success: Bool, data: String, errorMessage: String, timestamp: UInt64) {
+        self.success = success
+        self.data = data
+        self.errorMessage = errorMessage
+        self.timestamp = timestamp
+    }
+}
+
+
+extension StorageResult: Equatable, Hashable {
+    public static func ==(lhs: StorageResult, rhs: StorageResult) -> Bool {
+        if lhs.success != rhs.success {
+            return false
+        }
+        if lhs.data != rhs.data {
+            return false
+        }
+        if lhs.errorMessage != rhs.errorMessage {
+            return false
+        }
+        if lhs.timestamp != rhs.timestamp {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(success)
+        hasher.combine(data)
+        hasher.combine(errorMessage)
+        hasher.combine(timestamp)
+    }
+}
+
+
+public struct FfiConverterTypeStorageResult: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> StorageResult {
+        return try StorageResult(
+            success: FfiConverterBool.read(from: &buf), 
+            data: FfiConverterString.read(from: &buf), 
+            errorMessage: FfiConverterString.read(from: &buf), 
+            timestamp: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: StorageResult, into buf: inout [UInt8]) {
+        FfiConverterBool.write(value.success, into: &buf)
+        FfiConverterString.write(value.data, into: &buf)
+        FfiConverterString.write(value.errorMessage, into: &buf)
+        FfiConverterUInt64.write(value.timestamp, into: &buf)
+    }
+}
+
+
+public func FfiConverterTypeStorageResult_lift(_ buf: RustBuffer) throws -> StorageResult {
+    return try FfiConverterTypeStorageResult.lift(buf)
+}
+
+public func FfiConverterTypeStorageResult_lower(_ value: StorageResult) -> RustBuffer {
+    return FfiConverterTypeStorageResult.lower(value)
+}
+
+
+public struct UserInfo {
+    public var id: UInt32
+    public var name: String
+    public var email: String
+    public var level: UInt32
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(id: UInt32, name: String, email: String, level: UInt32) {
+        self.id = id
+        self.name = name
+        self.email = email
+        self.level = level
+    }
+}
+
+
+extension UserInfo: Equatable, Hashable {
+    public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
+        if lhs.id != rhs.id {
+            return false
+        }
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.email != rhs.email {
+            return false
+        }
+        if lhs.level != rhs.level {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(name)
+        hasher.combine(email)
+        hasher.combine(level)
+    }
+}
+
+
+public struct FfiConverterTypeUserInfo: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> UserInfo {
+        return try UserInfo(
+            id: FfiConverterUInt32.read(from: &buf), 
+            name: FfiConverterString.read(from: &buf), 
+            email: FfiConverterString.read(from: &buf), 
+            level: FfiConverterUInt32.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: UserInfo, into buf: inout [UInt8]) {
+        FfiConverterUInt32.write(value.id, into: &buf)
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterString.write(value.email, into: &buf)
+        FfiConverterUInt32.write(value.level, into: &buf)
+    }
+}
+
+
+public func FfiConverterTypeUserInfo_lift(_ buf: RustBuffer) throws -> UserInfo {
+    return try FfiConverterTypeUserInfo.lift(buf)
+}
+
+public func FfiConverterTypeUserInfo_lower(_ value: UserInfo) -> RustBuffer {
+    return FfiConverterTypeUserInfo.lower(value)
+}
+
+
+public struct UserPreferences {
+    public var theme: String
+    public var notificationsEnabled: Bool
+    public var language: String
+    public var autoSave: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(theme: String, notificationsEnabled: Bool, language: String, autoSave: Bool) {
+        self.theme = theme
+        self.notificationsEnabled = notificationsEnabled
+        self.language = language
+        self.autoSave = autoSave
+    }
+}
+
+
+extension UserPreferences: Equatable, Hashable {
+    public static func ==(lhs: UserPreferences, rhs: UserPreferences) -> Bool {
+        if lhs.theme != rhs.theme {
+            return false
+        }
+        if lhs.notificationsEnabled != rhs.notificationsEnabled {
+            return false
+        }
+        if lhs.language != rhs.language {
+            return false
+        }
+        if lhs.autoSave != rhs.autoSave {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(theme)
+        hasher.combine(notificationsEnabled)
+        hasher.combine(language)
+        hasher.combine(autoSave)
+    }
+}
+
+
+public struct FfiConverterTypeUserPreferences: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> UserPreferences {
+        return try UserPreferences(
+            theme: FfiConverterString.read(from: &buf), 
+            notificationsEnabled: FfiConverterBool.read(from: &buf), 
+            language: FfiConverterString.read(from: &buf), 
+            autoSave: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: UserPreferences, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.theme, into: &buf)
+        FfiConverterBool.write(value.notificationsEnabled, into: &buf)
+        FfiConverterString.write(value.language, into: &buf)
+        FfiConverterBool.write(value.autoSave, into: &buf)
+    }
+}
+
+
+public func FfiConverterTypeUserPreferences_lift(_ buf: RustBuffer) throws -> UserPreferences {
+    return try FfiConverterTypeUserPreferences.lift(buf)
+}
+
+public func FfiConverterTypeUserPreferences_lower(_ value: UserPreferences) -> RustBuffer {
+    return FfiConverterTypeUserPreferences.lower(value)
+}
+
+
+public struct WebSocketResult {
+    public var success: Bool
+    public var message: String
+    public var errorMessage: String
+    public var connectionStatus: String
+    public var timestamp: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(success: Bool, message: String, errorMessage: String, connectionStatus: String, timestamp: UInt64) {
+        self.success = success
+        self.message = message
+        self.errorMessage = errorMessage
+        self.connectionStatus = connectionStatus
+        self.timestamp = timestamp
+    }
+}
+
+
+extension WebSocketResult: Equatable, Hashable {
+    public static func ==(lhs: WebSocketResult, rhs: WebSocketResult) -> Bool {
+        if lhs.success != rhs.success {
+            return false
+        }
+        if lhs.message != rhs.message {
+            return false
+        }
+        if lhs.errorMessage != rhs.errorMessage {
+            return false
+        }
+        if lhs.connectionStatus != rhs.connectionStatus {
+            return false
+        }
+        if lhs.timestamp != rhs.timestamp {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(success)
+        hasher.combine(message)
+        hasher.combine(errorMessage)
+        hasher.combine(connectionStatus)
+        hasher.combine(timestamp)
+    }
+}
+
+
+public struct FfiConverterTypeWebSocketResult: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> WebSocketResult {
+        return try WebSocketResult(
+            success: FfiConverterBool.read(from: &buf), 
+            message: FfiConverterString.read(from: &buf), 
+            errorMessage: FfiConverterString.read(from: &buf), 
+            connectionStatus: FfiConverterString.read(from: &buf), 
+            timestamp: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: WebSocketResult, into buf: inout [UInt8]) {
+        FfiConverterBool.write(value.success, into: &buf)
+        FfiConverterString.write(value.message, into: &buf)
+        FfiConverterString.write(value.errorMessage, into: &buf)
+        FfiConverterString.write(value.connectionStatus, into: &buf)
+        FfiConverterUInt64.write(value.timestamp, into: &buf)
+    }
+}
+
+
+public func FfiConverterTypeWebSocketResult_lift(_ buf: RustBuffer) throws -> WebSocketResult {
+    return try FfiConverterTypeWebSocketResult.lift(buf)
+}
+
+public func FfiConverterTypeWebSocketResult_lower(_ value: WebSocketResult) -> RustBuffer {
+    return FfiConverterTypeWebSocketResult.lower(value)
+}
+
 fileprivate extension NSLock {
     func withLock<T>(f: () throws -> T) rethrows -> T {
         self.lock()
@@ -571,6 +1523,201 @@ private let IDX_CALLBACK_FREE: Int32 = 0
 private let UNIFFI_CALLBACK_SUCCESS: Int32 = 0
 private let UNIFFI_CALLBACK_ERROR: Int32 = 1
 private let UNIFFI_CALLBACK_UNEXPECTED_ERROR: Int32 = 2
+
+// Declaration and FfiConverters for DataProcessor Callback Interface
+
+public protocol DataProcessor : AnyObject {
+    func processItem(item: String)  -> ProcessResult
+    func validateInput(input: String)  -> Bool
+    func transformData(data: [String])  -> [String]
+    func getProcessorName()  -> String
+    
+}
+
+// The ForeignCallback that is passed to Rust.
+fileprivate let foreignCallbackCallbackInterfaceDataProcessor : ForeignCallback =
+    { (handle: UniFFICallbackHandle, method: Int32, argsData: UnsafePointer<UInt8>, argsLen: Int32, out_buf: UnsafeMutablePointer<RustBuffer>) -> Int32 in
+    
+
+    func invokeProcessItem(_ swiftCallbackInterface: DataProcessor, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.processItem(
+                    item:  try FfiConverterString.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterTypeProcessResult.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeValidateInput(_ swiftCallbackInterface: DataProcessor, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.validateInput(
+                    input:  try FfiConverterString.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterBool.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeTransformData(_ swiftCallbackInterface: DataProcessor, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.transformData(
+                    data:  try FfiConverterSequenceString.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterSequenceString.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeGetProcessorName(_ swiftCallbackInterface: DataProcessor, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.getProcessorName(
+                    )
+            var writer = [UInt8]()
+            FfiConverterString.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+
+    switch method {
+        case IDX_CALLBACK_FREE:
+            FfiConverterCallbackInterfaceDataProcessor.drop(handle: handle)
+            // Sucessful return
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_SUCCESS
+        case 1:
+            let cb: DataProcessor
+            do {
+                cb = try FfiConverterCallbackInterfaceDataProcessor.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("DataProcessor: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeProcessItem(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 2:
+            let cb: DataProcessor
+            do {
+                cb = try FfiConverterCallbackInterfaceDataProcessor.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("DataProcessor: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeValidateInput(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 3:
+            let cb: DataProcessor
+            do {
+                cb = try FfiConverterCallbackInterfaceDataProcessor.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("DataProcessor: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeTransformData(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 4:
+            let cb: DataProcessor
+            do {
+                cb = try FfiConverterCallbackInterfaceDataProcessor.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("DataProcessor: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeGetProcessorName(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        
+        // This should never happen, because an out of bounds method index won't
+        // ever be used. Once we can catch errors, we should return an InternalError.
+        // https://github.com/mozilla/uniffi-rs/issues/351
+        default:
+            // An unexpected error happened.
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+    }
+}
+
+// FfiConverter protocol for callback interfaces
+fileprivate struct FfiConverterCallbackInterfaceDataProcessor {
+    private static let initCallbackOnce: () = {
+        // Swift ensures this initializer code will once run once, even when accessed by multiple threads.
+        try! rustCall { (err: UnsafeMutablePointer<RustCallStatus>) in
+            uniffi_uniffi_callback_demo_fn_init_callback_dataprocessor(foreignCallbackCallbackInterfaceDataProcessor, err)
+        }
+    }()
+
+    private static func ensureCallbackinitialized() {
+        _ = initCallbackOnce
+    }
+
+    static func drop(handle: UniFFICallbackHandle) {
+        handleMap.remove(handle: handle)
+    }
+
+    private static var handleMap = UniFFICallbackHandleMap<DataProcessor>()
+}
+
+extension FfiConverterCallbackInterfaceDataProcessor : FfiConverter {
+    typealias SwiftType = DataProcessor
+    // We can use Handle as the FfiType because it's a typealias to UInt64
+    typealias FfiType = UniFFICallbackHandle
+
+    public static func lift(_ handle: UniFFICallbackHandle) throws -> SwiftType {
+        ensureCallbackinitialized();
+        guard let callback = handleMap.get(handle: handle) else {
+            throw UniffiInternalError.unexpectedStaleHandle
+        }
+        return callback
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        ensureCallbackinitialized();
+        let handle: UniFFICallbackHandle = try readInt(&buf)
+        return try lift(handle)
+    }
+
+    public static func lower(_ v: SwiftType) -> UniFFICallbackHandle {
+        ensureCallbackinitialized();
+        return handleMap.insert(obj: v)
+    }
+
+    public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
+        ensureCallbackinitialized();
+        writeInt(&buf, lower(v))
+    }
+}
+
+
 
 // Declaration and FfiConverters for EventCallback Callback Interface
 
@@ -737,6 +1884,480 @@ extension FfiConverterCallbackInterfaceEventCallback : FfiConverter {
     }
 }
 
+
+
+// Declaration and FfiConverters for StorageClient Callback Interface
+
+public protocol StorageClient : AnyObject {
+    func read(key: String)  -> StorageResult
+    func write(key: String, value: String)  -> StorageResult
+    
+}
+
+// The ForeignCallback that is passed to Rust.
+fileprivate let foreignCallbackCallbackInterfaceStorageClient : ForeignCallback =
+    { (handle: UniFFICallbackHandle, method: Int32, argsData: UnsafePointer<UInt8>, argsLen: Int32, out_buf: UnsafeMutablePointer<RustBuffer>) -> Int32 in
+    
+
+    func invokeRead(_ swiftCallbackInterface: StorageClient, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.read(
+                    key:  try FfiConverterString.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterTypeStorageResult.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeWrite(_ swiftCallbackInterface: StorageClient, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.write(
+                    key:  try FfiConverterString.read(from: &reader), 
+                    value:  try FfiConverterString.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterTypeStorageResult.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+
+    switch method {
+        case IDX_CALLBACK_FREE:
+            FfiConverterCallbackInterfaceStorageClient.drop(handle: handle)
+            // Sucessful return
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_SUCCESS
+        case 1:
+            let cb: StorageClient
+            do {
+                cb = try FfiConverterCallbackInterfaceStorageClient.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("StorageClient: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeRead(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 2:
+            let cb: StorageClient
+            do {
+                cb = try FfiConverterCallbackInterfaceStorageClient.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("StorageClient: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeWrite(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        
+        // This should never happen, because an out of bounds method index won't
+        // ever be used. Once we can catch errors, we should return an InternalError.
+        // https://github.com/mozilla/uniffi-rs/issues/351
+        default:
+            // An unexpected error happened.
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+    }
+}
+
+// FfiConverter protocol for callback interfaces
+fileprivate struct FfiConverterCallbackInterfaceStorageClient {
+    private static let initCallbackOnce: () = {
+        // Swift ensures this initializer code will once run once, even when accessed by multiple threads.
+        try! rustCall { (err: UnsafeMutablePointer<RustCallStatus>) in
+            uniffi_uniffi_callback_demo_fn_init_callback_storageclient(foreignCallbackCallbackInterfaceStorageClient, err)
+        }
+    }()
+
+    private static func ensureCallbackinitialized() {
+        _ = initCallbackOnce
+    }
+
+    static func drop(handle: UniFFICallbackHandle) {
+        handleMap.remove(handle: handle)
+    }
+
+    private static var handleMap = UniFFICallbackHandleMap<StorageClient>()
+}
+
+extension FfiConverterCallbackInterfaceStorageClient : FfiConverter {
+    typealias SwiftType = StorageClient
+    // We can use Handle as the FfiType because it's a typealias to UInt64
+    typealias FfiType = UniFFICallbackHandle
+
+    public static func lift(_ handle: UniFFICallbackHandle) throws -> SwiftType {
+        ensureCallbackinitialized();
+        guard let callback = handleMap.get(handle: handle) else {
+            throw UniffiInternalError.unexpectedStaleHandle
+        }
+        return callback
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        ensureCallbackinitialized();
+        let handle: UniFFICallbackHandle = try readInt(&buf)
+        return try lift(handle)
+    }
+
+    public static func lower(_ v: SwiftType) -> UniFFICallbackHandle {
+        ensureCallbackinitialized();
+        return handleMap.insert(obj: v)
+    }
+
+    public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
+        ensureCallbackinitialized();
+        writeInt(&buf, lower(v))
+    }
+}
+
+
+
+// Declaration and FfiConverters for UserProfileManager Callback Interface
+
+public protocol UserProfileManager : AnyObject {
+    func getUserInfo(userId: UInt32)  -> UserInfo
+    func updatePreferences(userId: UInt32, preferences: UserPreferences)  -> Bool
+    func calculateScore(userId: UInt32, metrics: [Double])  -> Double
+    func notifyUser(userId: UInt32, message: String) 
+    
+}
+
+// The ForeignCallback that is passed to Rust.
+fileprivate let foreignCallbackCallbackInterfaceUserProfileManager : ForeignCallback =
+    { (handle: UniFFICallbackHandle, method: Int32, argsData: UnsafePointer<UInt8>, argsLen: Int32, out_buf: UnsafeMutablePointer<RustBuffer>) -> Int32 in
+    
+
+    func invokeGetUserInfo(_ swiftCallbackInterface: UserProfileManager, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.getUserInfo(
+                    userId:  try FfiConverterUInt32.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterTypeUserInfo.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeUpdatePreferences(_ swiftCallbackInterface: UserProfileManager, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.updatePreferences(
+                    userId:  try FfiConverterUInt32.read(from: &reader), 
+                    preferences:  try FfiConverterTypeUserPreferences.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterBool.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeCalculateScore(_ swiftCallbackInterface: UserProfileManager, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.calculateScore(
+                    userId:  try FfiConverterUInt32.read(from: &reader), 
+                    metrics:  try FfiConverterSequenceDouble.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterDouble.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeNotifyUser(_ swiftCallbackInterface: UserProfileManager, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            try swiftCallbackInterface.notifyUser(
+                    userId:  try FfiConverterUInt32.read(from: &reader), 
+                    message:  try FfiConverterString.read(from: &reader)
+                    )
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+
+    switch method {
+        case IDX_CALLBACK_FREE:
+            FfiConverterCallbackInterfaceUserProfileManager.drop(handle: handle)
+            // Sucessful return
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_SUCCESS
+        case 1:
+            let cb: UserProfileManager
+            do {
+                cb = try FfiConverterCallbackInterfaceUserProfileManager.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("UserProfileManager: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeGetUserInfo(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 2:
+            let cb: UserProfileManager
+            do {
+                cb = try FfiConverterCallbackInterfaceUserProfileManager.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("UserProfileManager: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeUpdatePreferences(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 3:
+            let cb: UserProfileManager
+            do {
+                cb = try FfiConverterCallbackInterfaceUserProfileManager.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("UserProfileManager: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeCalculateScore(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 4:
+            let cb: UserProfileManager
+            do {
+                cb = try FfiConverterCallbackInterfaceUserProfileManager.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("UserProfileManager: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeNotifyUser(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        
+        // This should never happen, because an out of bounds method index won't
+        // ever be used. Once we can catch errors, we should return an InternalError.
+        // https://github.com/mozilla/uniffi-rs/issues/351
+        default:
+            // An unexpected error happened.
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+    }
+}
+
+// FfiConverter protocol for callback interfaces
+fileprivate struct FfiConverterCallbackInterfaceUserProfileManager {
+    private static let initCallbackOnce: () = {
+        // Swift ensures this initializer code will once run once, even when accessed by multiple threads.
+        try! rustCall { (err: UnsafeMutablePointer<RustCallStatus>) in
+            uniffi_uniffi_callback_demo_fn_init_callback_userprofilemanager(foreignCallbackCallbackInterfaceUserProfileManager, err)
+        }
+    }()
+
+    private static func ensureCallbackinitialized() {
+        _ = initCallbackOnce
+    }
+
+    static func drop(handle: UniFFICallbackHandle) {
+        handleMap.remove(handle: handle)
+    }
+
+    private static var handleMap = UniFFICallbackHandleMap<UserProfileManager>()
+}
+
+extension FfiConverterCallbackInterfaceUserProfileManager : FfiConverter {
+    typealias SwiftType = UserProfileManager
+    // We can use Handle as the FfiType because it's a typealias to UInt64
+    typealias FfiType = UniFFICallbackHandle
+
+    public static func lift(_ handle: UniFFICallbackHandle) throws -> SwiftType {
+        ensureCallbackinitialized();
+        guard let callback = handleMap.get(handle: handle) else {
+            throw UniffiInternalError.unexpectedStaleHandle
+        }
+        return callback
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        ensureCallbackinitialized();
+        let handle: UniFFICallbackHandle = try readInt(&buf)
+        return try lift(handle)
+    }
+
+    public static func lower(_ v: SwiftType) -> UniFFICallbackHandle {
+        ensureCallbackinitialized();
+        return handleMap.insert(obj: v)
+    }
+
+    public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
+        ensureCallbackinitialized();
+        writeInt(&buf, lower(v))
+    }
+}
+
+
+
+// Declaration and FfiConverters for WebSocketClient Callback Interface
+
+public protocol WebSocketClient : AnyObject {
+    func send(message: String)  -> WebSocketResult
+    func read()  -> WebSocketResult
+    
+}
+
+// The ForeignCallback that is passed to Rust.
+fileprivate let foreignCallbackCallbackInterfaceWebSocketClient : ForeignCallback =
+    { (handle: UniFFICallbackHandle, method: Int32, argsData: UnsafePointer<UInt8>, argsLen: Int32, out_buf: UnsafeMutablePointer<RustBuffer>) -> Int32 in
+    
+
+    func invokeSend(_ swiftCallbackInterface: WebSocketClient, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.send(
+                    message:  try FfiConverterString.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterTypeWebSocketResult.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeRead(_ swiftCallbackInterface: WebSocketClient, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.read(
+                    )
+            var writer = [UInt8]()
+            FfiConverterTypeWebSocketResult.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+
+    switch method {
+        case IDX_CALLBACK_FREE:
+            FfiConverterCallbackInterfaceWebSocketClient.drop(handle: handle)
+            // Sucessful return
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_SUCCESS
+        case 1:
+            let cb: WebSocketClient
+            do {
+                cb = try FfiConverterCallbackInterfaceWebSocketClient.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("WebSocketClient: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeSend(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 2:
+            let cb: WebSocketClient
+            do {
+                cb = try FfiConverterCallbackInterfaceWebSocketClient.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("WebSocketClient: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeRead(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        
+        // This should never happen, because an out of bounds method index won't
+        // ever be used. Once we can catch errors, we should return an InternalError.
+        // https://github.com/mozilla/uniffi-rs/issues/351
+        default:
+            // An unexpected error happened.
+            // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs`
+            return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+    }
+}
+
+// FfiConverter protocol for callback interfaces
+fileprivate struct FfiConverterCallbackInterfaceWebSocketClient {
+    private static let initCallbackOnce: () = {
+        // Swift ensures this initializer code will once run once, even when accessed by multiple threads.
+        try! rustCall { (err: UnsafeMutablePointer<RustCallStatus>) in
+            uniffi_uniffi_callback_demo_fn_init_callback_websocketclient(foreignCallbackCallbackInterfaceWebSocketClient, err)
+        }
+    }()
+
+    private static func ensureCallbackinitialized() {
+        _ = initCallbackOnce
+    }
+
+    static func drop(handle: UniFFICallbackHandle) {
+        handleMap.remove(handle: handle)
+    }
+
+    private static var handleMap = UniFFICallbackHandleMap<WebSocketClient>()
+}
+
+extension FfiConverterCallbackInterfaceWebSocketClient : FfiConverter {
+    typealias SwiftType = WebSocketClient
+    // We can use Handle as the FfiType because it's a typealias to UInt64
+    typealias FfiType = UniFFICallbackHandle
+
+    public static func lift(_ handle: UniFFICallbackHandle) throws -> SwiftType {
+        ensureCallbackinitialized();
+        guard let callback = handleMap.get(handle: handle) else {
+            throw UniffiInternalError.unexpectedStaleHandle
+        }
+        return callback
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        ensureCallbackinitialized();
+        let handle: UniFFICallbackHandle = try readInt(&buf)
+        return try lift(handle)
+    }
+
+    public static func lower(_ v: SwiftType) -> UniFFICallbackHandle {
+        ensureCallbackinitialized();
+        return handleMap.insert(obj: v)
+    }
+
+    public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
+        ensureCallbackinitialized();
+        writeInt(&buf, lower(v))
+    }
+}
+
 fileprivate struct FfiConverterOptionInt32: FfiConverterRustBuffer {
     typealias SwiftType = Int32?
 
@@ -753,6 +2374,48 @@ fileprivate struct FfiConverterOptionInt32: FfiConverterRustBuffer {
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterInt32.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionDouble: FfiConverterRustBuffer {
+    typealias SwiftType = Double?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterDouble.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterDouble.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionBool: FfiConverterRustBuffer {
+    typealias SwiftType = Bool?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterBool.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterBool.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
@@ -776,6 +2439,177 @@ fileprivate struct FfiConverterOptionString: FfiConverterRustBuffer {
         case 1: return try FfiConverterString.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
+    }
+}
+
+fileprivate struct FfiConverterOptionTypeProcessResult: FfiConverterRustBuffer {
+    typealias SwiftType = ProcessResult?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeProcessResult.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeProcessResult.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionTypeStorageResult: FfiConverterRustBuffer {
+    typealias SwiftType = StorageResult?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeStorageResult.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeStorageResult.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionTypeUserInfo: FfiConverterRustBuffer {
+    typealias SwiftType = UserInfo?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeUserInfo.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeUserInfo.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionTypeWebSocketResult: FfiConverterRustBuffer {
+    typealias SwiftType = WebSocketResult?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeWebSocketResult.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeWebSocketResult.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionSequenceString: FfiConverterRustBuffer {
+    typealias SwiftType = [String]?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterSequenceString.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterSequenceString.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterSequenceDouble: FfiConverterRustBuffer {
+    typealias SwiftType = [Double]
+
+    public static func write(_ value: [Double], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterDouble.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [Double] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [Double]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterDouble.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+fileprivate struct FfiConverterSequenceString: FfiConverterRustBuffer {
+    typealias SwiftType = [String]
+
+    public static func write(_ value: [String], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterString.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [String] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [String]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterString.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+fileprivate struct FfiConverterSequenceTypeWebSocketResult: FfiConverterRustBuffer {
+    typealias SwiftType = [WebSocketResult]
+
+    public static func write(_ value: [WebSocketResult], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeWebSocketResult.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [WebSocketResult] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [WebSocketResult]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeWebSocketResult.read(from: &buf))
+        }
+        return seq
     }
 }
 
@@ -807,6 +2641,42 @@ public func registerCallback(callback: EventCallback)  -> UInt32 {
     )
 }
 
+public func registerDataProcessor(processor: DataProcessor)  -> UInt32 {
+    return try!  FfiConverterUInt32.lift(
+        try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_register_data_processor(
+        FfiConverterCallbackInterfaceDataProcessor.lower(processor),$0)
+}
+    )
+}
+
+public func registerStorageClient(client: StorageClient)  -> UInt32 {
+    return try!  FfiConverterUInt32.lift(
+        try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_register_storage_client(
+        FfiConverterCallbackInterfaceStorageClient.lower(client),$0)
+}
+    )
+}
+
+public func registerUserManager(manager: UserProfileManager)  -> UInt32 {
+    return try!  FfiConverterUInt32.lift(
+        try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_register_user_manager(
+        FfiConverterCallbackInterfaceUserProfileManager.lower(manager),$0)
+}
+    )
+}
+
+public func registerWebsocketClient(client: WebSocketClient)  -> UInt32 {
+    return try!  FfiConverterUInt32.lift(
+        try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_register_websocket_client(
+        FfiConverterCallbackInterfaceWebSocketClient.lower(client),$0)
+}
+    )
+}
+
 public func setServiceCallback(service: CallbackService, callbackId: UInt32)  {
     try! rustCall() {
     uniffi_uniffi_callback_demo_fn_func_set_service_callback(
@@ -821,6 +2691,42 @@ public func unregisterCallback(callbackId: UInt32)  {
     try! rustCall() {
     uniffi_uniffi_callback_demo_fn_func_unregister_callback(
         FfiConverterUInt32.lower(callbackId),$0)
+}
+}
+
+
+
+public func unregisterDataProcessor(processorId: UInt32)  {
+    try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_unregister_data_processor(
+        FfiConverterUInt32.lower(processorId),$0)
+}
+}
+
+
+
+public func unregisterStorageClient(clientId: UInt32)  {
+    try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_unregister_storage_client(
+        FfiConverterUInt32.lower(clientId),$0)
+}
+}
+
+
+
+public func unregisterUserManager(managerId: UInt32)  {
+    try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_unregister_user_manager(
+        FfiConverterUInt32.lower(managerId),$0)
+}
+}
+
+
+
+public func unregisterWebsocketClient(clientId: UInt32)  {
+    try! rustCall() {
+    uniffi_uniffi_callback_demo_fn_func_unregister_websocket_client(
+        FfiConverterUInt32.lower(clientId),$0)
 }
 }
 
@@ -850,10 +2756,34 @@ private var initializationResult: InitializationResult {
     if (uniffi_uniffi_callback_demo_checksum_func_register_callback() != 43118) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_uniffi_callback_demo_checksum_func_register_data_processor() != 7451) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_register_storage_client() != 43187) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_register_user_manager() != 56399) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_register_websocket_client() != 22419) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_uniffi_callback_demo_checksum_func_set_service_callback() != 65210) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_uniffi_callback_demo_checksum_func_unregister_callback() != 15590) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_unregister_data_processor() != 58159) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_unregister_storage_client() != 7700) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_unregister_user_manager() != 21103) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_func_unregister_websocket_client() != 49975) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers() != 39402) {
@@ -871,7 +2801,94 @@ private var initializationResult: InitializationResult {
     if (uniffi_uniffi_callback_demo_checksum_method_callbackservice_trigger_event() != 36495) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_batch_transform() != 41337) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_get_processor_info() != 12223) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_process_single_item() != 36609) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_set_processor() != 29192) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessingservice_validate_and_process() != 53686) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageservice_backup_multiple_keys() != 26356) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageservice_copy_data() != 16511) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageservice_read_data() != 37470) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageservice_set_client() != 39818) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageservice_write_data() != 20020) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userservice_calculate_user_score() != 52355) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userservice_get_user() != 46262) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userservice_send_notification() != 42386) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userservice_set_manager() != 25602) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userservice_update_user_preferences() != 16280) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketservice_ping_pong() != 7567) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketservice_read_message() != 23634) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_and_read() != 40441) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_batch_messages() != 4381) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketservice_send_message() != 42697) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketservice_set_client() != 53282) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_uniffi_callback_demo_checksum_constructor_callbackservice_new() != 24557) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_constructor_dataprocessingservice_new() != 22189) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_constructor_storageservice_new() != 5653) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_constructor_userservice_new() != 12398) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_constructor_websocketservice_new() != 864) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessor_process_item() != 21290) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessor_validate_input() != 7186) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessor_transform_data() != 33233) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_dataprocessor_get_processor_name() != 52683) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_event() != 65012) {
@@ -881,6 +2898,30 @@ private var initializationResult: InitializationResult {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers() != 26463) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageclient_read() != 65022) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_storageclient_write() != 31647) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_get_user_info() != 4556) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_update_preferences() != 28031) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_calculate_score() != 3606) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_userprofilemanager_notify_user() != 10907) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketclient_send() != 7602) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_websocketclient_read() != 34955) {
         return InitializationResult.apiChecksumMismatch
     }
 

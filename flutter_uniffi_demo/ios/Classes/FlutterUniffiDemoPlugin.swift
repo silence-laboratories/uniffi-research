@@ -8,11 +8,17 @@ public class FlutterUniffiDemoPlugin: NSObject, FlutterPlugin, FlutterStreamHand
     private var isInitialized = false
     private var callbackRegistered = false
     
+    // Store Dart callback function ID and use MethodChannel to call back to Dart
+    private var dartCallbackChannelId: String?
+    
+    private var methodChannel: FlutterMethodChannel?
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_uniffi_demo", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "flutter_uniffi_demo_events", binaryMessenger: registrar.messenger())
         
         let instance = FlutterUniffiDemoPlugin()
+        instance.methodChannel = channel
         registrar.addMethodCallDelegate(instance, channel: channel)
         eventChannel.setStreamHandler(instance)
     }
@@ -29,8 +35,16 @@ public class FlutterUniffiDemoPlugin: NSObject, FlutterPlugin, FlutterStreamHand
                 result(FlutterError(code: "NOT_INITIALIZED", message: "Service not initialized", details: nil))
                 return
             }
+            
+            guard let args = call.arguments as? [String: Any],
+                  let callbackId = args["callbackId"] as? String else {
+                result(FlutterError(code: "INVALID_CALLBACK", message: "No callback ID provided", details: nil))
+                return
+            }
+            
+            dartCallbackChannelId = callbackId
             callbackRegistered = true
-            print("Callback registered (iOS demo mode)")
+            print("Dart callback registered with ID: \(callbackId) (iOS demo mode)")
             result(1) // Return demo callback ID
             
         case "getStatus":
@@ -113,6 +127,56 @@ public class FlutterUniffiDemoPlugin: NSObject, FlutterPlugin, FlutterStreamHand
             }
             let formatted = "\(prefix): \(content) (iOS demo mode)"
             result(formatted)
+            
+        case "addTwoNumbers":
+            guard let args = call.arguments as? [String: Any],
+                  let a = args["a"] as? Int,
+                  let b = args["b"] as? Int else {
+                result(FlutterError(code: "INVALID_ARGS", message: "Invalid arguments", details: nil))
+                return
+            }
+            
+            if let callbackId = dartCallbackChannelId, callbackRegistered {
+                // Call back to Dart to perform the addition
+                methodChannel?.invokeMethod("dartCallback", arguments: [
+                    "callbackId": callbackId,
+                    "function": "addTwoNumbers",
+                    "args": ["a": a, "b": b]
+                ]) { [weak self] dartResult in
+                    let sum = dartResult as? Int ?? 0
+                    
+                    // Send callback event to Flutter
+                    DispatchQueue.main.async {
+                        self?.eventSink?([
+                            "type": "calculationResult",
+                            "operation": "addition",
+                            "a": a,
+                            "b": b,
+                            "result": sum,
+                            "message": "iOS demo (Dart callback): \(a) + \(b) = \(sum)"
+                        ])
+                    }
+                    
+                    result(sum)
+                }
+            } else {
+                // Fallback to local calculation if no Dart callback registered
+                let sum = a + b
+                
+                // Send callback event to Flutter
+                DispatchQueue.main.async { [weak self] in
+                    self?.eventSink?([
+                        "type": "calculationResult",
+                        "operation": "addition",
+                        "a": a,
+                        "b": b,
+                        "result": sum,
+                        "message": "iOS demo (fallback): \(a) + \(b) = \(sum)"
+                    ])
+                }
+                
+                result(sum)
+            }
             
         case "cleanup":
             callbackRegistered = false

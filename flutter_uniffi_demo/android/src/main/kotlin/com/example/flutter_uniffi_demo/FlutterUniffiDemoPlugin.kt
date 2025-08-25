@@ -12,6 +12,7 @@ import io.flutter.plugin.common.EventChannel.StreamHandler
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import io.flutter.FlutterInjector
 
 /** FlutterUniffiDemoPlugin */
 class FlutterUniffiDemoPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
@@ -24,6 +25,9 @@ class FlutterUniffiDemoPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
   // For demonstration purposes, we'll simulate the Rust callbacks
   private var isInitialized = false
   private var callbackRegistered = false
+  
+  // Store Dart callback function ID and use MethodChannel to call back to Dart
+  private var dartCallbackChannelId: String? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_uniffi_demo")
@@ -51,9 +55,16 @@ class FlutterUniffiDemoPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
             result.error("NOT_INITIALIZED", "Service not initialized", null)
             return
           }
-          callbackRegistered = true
-          Log.d("FlutterUniffiDemo", "Callback registered (Android demo mode)")
-          result.success(1) // Return demo callback ID
+          
+          val callbackId = call.argument<String>("callbackId")
+          if (callbackId != null) {
+            dartCallbackChannelId = callbackId
+            callbackRegistered = true
+            Log.d("FlutterUniffiDemo", "Dart callback registered with ID: $callbackId (Android demo mode)")
+            result.success(1) // Return demo callback ID
+          } else {
+            result.error("INVALID_CALLBACK", "No callback ID provided", null)
+          }
         } catch (e: Exception) {
           result.error("CALLBACK_ERROR", "Failed to register callback: ${e.message}", null)
         }
@@ -146,16 +157,76 @@ class FlutterUniffiDemoPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
         }
       }
       
-      "cleanup" -> {
-        try {
-          callbackRegistered = false
-          isInitialized = false
-          Log.d("FlutterUniffiDemo", "Cleanup completed (Android demo mode)")
-          result.success("Cleanup completed (Android demo mode)")
-        } catch (e: Exception) {
-          result.error("CLEANUP_ERROR", "Failed to cleanup: ${e.message}", null)
-        }
-      }
+                  "addTwoNumbers" -> {
+                try {
+                    val a = call.argument<Int>("a") ?: 0
+                    val b = call.argument<Int>("b") ?: 0
+                    
+                    if (dartCallbackChannelId != null && callbackRegistered) {
+                        // Call back to Dart to perform the addition
+                        channel.invokeMethod("dartCallback", mapOf(
+                            "callbackId" to dartCallbackChannelId,
+                            "function" to "addTwoNumbers",
+                            "args" to mapOf("a" to a, "b" to b)
+                        ), object : MethodChannel.Result {
+                            override fun success(dartResult: Any?) {
+                                val sum = dartResult as? Int ?: 0
+                                
+                                // Send callback event to Flutter
+                                mainHandler.post {
+                                    eventSink?.success(mapOf(
+                                        "type" to "calculationResult",
+                                        "operation" to "addition",
+                                        "a" to a,
+                                        "b" to b,
+                                        "result" to sum,
+                                        "message" to "Android demo (Dart callback): $a + $b = $sum"
+                                    ))
+                                }
+                                
+                                result.success(sum)
+                            }
+                            
+                            override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
+                                result.error("DART_CALLBACK_ERROR", "Dart callback failed: $errorMessage", errorDetails)
+                            }
+                            
+                            override fun notImplemented() {
+                                result.error("DART_CALLBACK_NOT_IMPLEMENTED", "Dart callback not implemented", null)
+                            }
+                        })
+                    } else {
+                        // Fallback to local calculation if no Dart callback registered
+                        val sum = a + b
+                        
+                        mainHandler.post {
+                            eventSink?.success(mapOf(
+                                "type" to "calculationResult",
+                                "operation" to "addition",
+                                "a" to a,
+                                "b" to b,
+                                "result" to sum,
+                                "message" to "Android demo (fallback): $a + $b = $sum"
+                            ))
+                        }
+                        
+                        result.success(sum)
+                    }
+                } catch (e: Exception) {
+                    result.error("CALCULATION_ERROR", "Failed to add numbers: ${e.message}", null)
+                }
+            }
+            
+            "cleanup" -> {
+                try {
+                    callbackRegistered = false
+                    isInitialized = false
+                    Log.d("FlutterUniffiDemo", "Cleanup completed (Android demo mode)")
+                    result.success("Cleanup completed (Android demo mode)")
+                } catch (e: Exception) {
+                    result.error("CLEANUP_ERROR", "Failed to cleanup: ${e.message}", null)
+                }
+            }
       
       else -> {
         result.notImplemented()

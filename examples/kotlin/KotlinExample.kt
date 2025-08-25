@@ -9,6 +9,12 @@ class MyEventCallback : EventCallback {
     override fun onDataReceived(data: ByteArray): String {
         return "Kotlin processed ${data.size} bytes of data: ${data.take(10).toList()}"
     }
+    
+    override fun addTwoNumbers(a: Int, b: Int): Int {
+        val result = a + b
+        println("Kotlin callback: $a + $b = $result")
+        return result
+    }
 }
 
 fun main() {
@@ -51,6 +57,15 @@ fun main() {
         println("\n--- Testing Utility Functions ---")
         val formattedMessage = formatMessage("INFO", "This is a test message")
         println("Formatted message: $formattedMessage")
+        
+        // Test callback function calls
+        println("\n--- Testing Callback Function Calls ---")
+        val addResult = service.callAddTwoNumbers(15, 27)
+        if (addResult != null) {
+            println("Addition result from callback: $addResult")
+        } else {
+            println("No addition result returned (no callback set)")
+        }
         
         // Test background work (this will block for a few seconds)
         println("\n--- Testing Background Work ---")

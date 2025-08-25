@@ -390,6 +390,8 @@ internal interface _UniFFILib : Library {
     ): Unit
     fun uniffi_uniffi_callback_demo_fn_constructor_callbackservice_new(_uniffi_out_err: RustCallStatus, 
     ): Pointer
+    fun uniffi_uniffi_callback_demo_fn_method_callbackservice_call_add_two_numbers(`ptr`: Pointer,`a`: Int,`b`: Int,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_uniffi_callback_demo_fn_method_callbackservice_get_status(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_uniffi_callback_demo_fn_method_callbackservice_process_data(`ptr`: Pointer,`data`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
@@ -534,6 +536,8 @@ internal interface _UniFFILib : Library {
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_func_unregister_callback(
     ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers(
+    ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_callbackservice_get_status(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_callbackservice_process_data(
@@ -547,6 +551,8 @@ internal interface _UniFFILib : Library {
     fun uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_event(
     ): Short
     fun uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_data_received(
+    ): Short
+    fun uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers(
     ): Short
     fun ffi_uniffi_callback_demo_uniffi_contract_version(
     ): Int
@@ -580,6 +586,9 @@ private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
     if (lib.uniffi_uniffi_callback_demo_checksum_func_unregister_callback() != 15590.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers() != 39402.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_uniffi_callback_demo_checksum_method_callbackservice_get_status() != 41262.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -599,6 +608,9 @@ private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_data_received() != 9547.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers() != 26463.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -625,6 +637,26 @@ public object FfiConverterUInt: FfiConverter<UInt, Int> {
 
     override fun write(value: UInt, buf: ByteBuffer) {
         buf.putInt(value.toInt())
+    }
+}
+
+public object FfiConverterInt: FfiConverter<Int, Int> {
+    override fun lift(value: Int): Int {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Int {
+        return buf.getInt()
+    }
+
+    override fun lower(value: Int): Int {
+        return value
+    }
+
+    override fun allocationSize(value: Int) = 4
+
+    override fun write(value: Int, buf: ByteBuffer) {
+        buf.putInt(value)
     }
 }
 
@@ -863,6 +895,7 @@ abstract class FFIObject(
 
 public interface CallbackServiceInterface {
     
+    fun `callAddTwoNumbers`(`a`: Int, `b`: Int): Int?
     fun `getStatus`(): String
     fun `processData`(`data`: ByteArray): String?
     fun `simulateBackgroundWork`(`durationSeconds`: UInt)
@@ -893,6 +926,17 @@ class CallbackService(
         }
     }
 
+    override fun `callAddTwoNumbers`(`a`: Int, `b`: Int): Int? =
+        callWithPointer {
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_uniffi_callback_demo_fn_method_callbackservice_call_add_two_numbers(it,
+        FfiConverterInt.lower(`a`),FfiConverterInt.lower(`b`),
+        _status)
+}
+        }.let {
+            FfiConverterOptionalInt.lift(it)
+        }
+    
     override fun `getStatus`(): String =
         callWithPointer {
     rustCall() { _status ->
@@ -1051,6 +1095,7 @@ public abstract class FfiConverterCallbackInterface<CallbackInterface>(
 public interface EventCallback {
     fun `onEvent`(`eventType`: String, `message`: String)
     fun `onDataReceived`(`data`: ByteArray): String
+    fun `addTwoNumbers`(`a`: Int, `b`: Int): Int
     
     companion object
 }
@@ -1088,6 +1133,22 @@ internal class ForeignCallbackTypeEventCallback : ForeignCallback {
                 // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
                 try {
                     this.`invokeOnDataReceived`(cb, argsData, argsLen, outBuf)
+                } catch (e: Throwable) {
+                    // Unexpected error
+                    try {
+                        // Try to serialize the error into a string
+                        outBuf.setValue(FfiConverterString.lower(e.toString()))
+                    } catch (e: Throwable) {
+                        // If that fails, then it's time to give up and just return
+                    }
+                    UNIFFI_CALLBACK_UNEXPECTED_ERROR
+                }
+            }
+            3 -> {
+                // Call the method, write to outBuf and return a status code
+                // See docs of ForeignCallback in `uniffi_core/src/ffi/foreigncallbacks.rs` for info
+                try {
+                    this.`invokeAddTwoNumbers`(cb, argsData, argsLen, outBuf)
                 } catch (e: Throwable) {
                     // Unexpected error
                     try {
@@ -1150,6 +1211,26 @@ internal class ForeignCallbackTypeEventCallback : ForeignCallback {
         return makeCallAndHandleError()
     }
     
+    @Suppress("UNUSED_PARAMETER")
+    private fun `invokeAddTwoNumbers`(kotlinCallbackInterface: EventCallback, argsData: Pointer, argsLen: Int, outBuf: RustBufferByReference): Int {
+        val argsBuf = argsData.getByteBuffer(0, argsLen.toLong()).also {
+            it.order(ByteOrder.BIG_ENDIAN)
+        }
+        fun makeCall() : Int {
+            val returnValue = kotlinCallbackInterface.`addTwoNumbers`(
+                FfiConverterInt.read(argsBuf)
+                , 
+                FfiConverterInt.read(argsBuf)
+                
+            )
+            outBuf.setValue(FfiConverterInt.lowerIntoRustBuffer(returnValue))
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        fun makeCallAndHandleError() : Int = makeCall()
+
+        return makeCallAndHandleError()
+    }
+    
 }
 
 // The ffiConverter which transforms the Callbacks in to Handles to pass to Rust.
@@ -1159,6 +1240,35 @@ public object FfiConverterTypeEventCallback: FfiConverterCallbackInterface<Event
     override fun register(lib: _UniFFILib) {
         rustCall() { status ->
             lib.uniffi_uniffi_callback_demo_fn_init_callback_eventcallback(this.foreignCallback, status)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalInt: FfiConverterRustBuffer<Int?> {
+    override fun read(buf: ByteBuffer): Int? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterInt.read(buf)
+    }
+
+    override fun allocationSize(value: Int?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterInt.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Int?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterInt.write(value, buf)
         }
     }
 }

@@ -11,6 +11,12 @@ class MyEventCallback: EventCallback {
         let preview = Array(bytes.prefix(10))
         return "Swift processed \(data.count) bytes of data: \(preview)"
     }
+    
+    func addTwoNumbers(a: Int32, b: Int32) -> Int32 {
+        let result = a + b
+        print("Swift callback: \(a) + \(b) = \(result)")
+        return result
+    }
 }
 
 func runDemo() {
@@ -52,6 +58,14 @@ func runDemo() {
     print("\n--- Testing Utility Functions ---")
     let formattedMessage = formatMessage(prefix: "INFO", content: "This is a test message")
     print("Formatted message: \(formattedMessage)")
+    
+    // Test callback function calls
+    print("\n--- Testing Callback Function Calls ---")
+    if let addResult = service.callAddTwoNumbers(a: 15, b: 27) {
+        print("Addition result from callback: \(addResult)")
+    } else {
+        print("No addition result returned (no callback set)")
+    }
     
     // Test background work (this will block for a few seconds)
     print("\n--- Testing Background Work ---")

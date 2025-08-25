@@ -68,6 +68,8 @@ void uniffi_uniffi_callback_demo_fn_free_callbackservice(void*_Nonnull ptr, Rust
 void*_Nonnull uniffi_uniffi_callback_demo_fn_constructor_callbackservice_new(RustCallStatus *_Nonnull out_status
     
 );
+RustBuffer uniffi_uniffi_callback_demo_fn_method_callbackservice_call_add_two_numbers(void*_Nonnull ptr, int32_t a, int32_t b, RustCallStatus *_Nonnull out_status
+);
 RustBuffer uniffi_uniffi_callback_demo_fn_method_callbackservice_get_status(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
 );
 RustBuffer uniffi_uniffi_callback_demo_fn_method_callbackservice_process_data(void*_Nonnull ptr, RustBuffer data, RustCallStatus *_Nonnull out_status
@@ -217,6 +219,9 @@ uint16_t uniffi_uniffi_callback_demo_checksum_func_set_service_callback(void
 uint16_t uniffi_uniffi_callback_demo_checksum_func_unregister_callback(void
     
 );
+uint16_t uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers(void
+    
+);
 uint16_t uniffi_uniffi_callback_demo_checksum_method_callbackservice_get_status(void
     
 );
@@ -236,6 +241,9 @@ uint16_t uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_event(void
     
 );
 uint16_t uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_data_received(void
+    
+);
+uint16_t uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers(void
     
 );
 uint32_t ffi_uniffi_callback_demo_uniffi_contract_version(void

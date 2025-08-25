@@ -60,6 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await _uniffiDemo.initialize();
       
+      // Register Dart callback functions
+      await _uniffiDemo.registerDartCallback('addTwoNumbers', _dartAddTwoNumbers);
+      
       // Listen to callback events
       _eventSubscription = _uniffiDemo.eventStream.listen((event) {
         setState(() {
@@ -77,6 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  /// Dart implementation of the add two numbers callback
+  int _dartAddTwoNumbers(int a, int b) {
+    final result = a + b;
+    debugPrint('🎯 Dart callback executed: $a + $b = $result');
+    
+    // You can add any custom Dart logic here!
+    // For example, logging, validation, complex calculations, etc.
+    if (result > 50) {
+      debugPrint('💡 Large result detected: $result');
+    }
+    
+    return result;
   }
 
   Future<void> _updateStatus() async {
@@ -156,6 +173,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> _addTwoNumbers() async {
+    try {
+      final a = 15;
+      final b = 27;
+      final result = await _uniffiDemo.addTwoNumbers(a, b);
+      setState(() => _lastResult = 'Addition result: $a + $b = $result');
+      _showSuccess('Numbers added successfully via callback');
+    } catch (e) {
+      _showError('Failed to add numbers: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,6 +256,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 icon: const Icon(Icons.format_quote),
                                 label: const Text('Format Message'),
                               ),
+                              ElevatedButton.icon(
+                                onPressed: _addTwoNumbers,
+                                icon: const Icon(Icons.calculate),
+                                label: const Text('Add Numbers'),
+                              ),
                             ],
                           ),
                         ],
@@ -279,10 +313,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   leading: Icon(
                                     event.type == CallbackEventType.event
                                         ? Icons.event
-                                        : Icons.data_object,
+                                        : event.type == CallbackEventType.calculationResult
+                                            ? Icons.calculate
+                                            : Icons.data_object,
                                     color: event.type == CallbackEventType.event
                                         ? Colors.blue
-                                        : Colors.orange,
+                                        : event.type == CallbackEventType.calculationResult
+                                            ? Colors.green
+                                            : Colors.orange,
                                   ),
                                   title: Text(
                                     event.toString(),

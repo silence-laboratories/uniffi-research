@@ -310,6 +310,19 @@ fileprivate struct FfiConverterUInt32: FfiConverterPrimitive {
     }
 }
 
+fileprivate struct FfiConverterInt32: FfiConverterPrimitive {
+    typealias FfiType = Int32
+    typealias SwiftType = Int32
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Int32 {
+        return try lift(readInt(&buf))
+    }
+
+    public static func write(_ value: Int32, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(value))
+    }
+}
+
 fileprivate struct FfiConverterString: FfiConverter {
     typealias SwiftType = String
     typealias FfiType = RustBuffer
@@ -365,6 +378,7 @@ fileprivate struct FfiConverterData: FfiConverterRustBuffer {
 
 
 public protocol CallbackServiceProtocol {
+    func callAddTwoNumbers(a: Int32, b: Int32)   -> Int32?
     func getStatus()   -> String
     func processData(data: Data)   -> String?
     func simulateBackgroundWork(durationSeconds: UInt32)  
@@ -395,6 +409,19 @@ public class CallbackService: CallbackServiceProtocol {
 
     
     
+
+    public func callAddTwoNumbers(a: Int32, b: Int32)  -> Int32? {
+        return try!  FfiConverterOptionInt32.lift(
+            try! 
+    rustCall() {
+    
+    uniffi_uniffi_callback_demo_fn_method_callbackservice_call_add_two_numbers(self.pointer, 
+        FfiConverterInt32.lower(a),
+        FfiConverterInt32.lower(b),$0
+    )
+}
+        )
+    }
 
     public func getStatus()  -> String {
         return try!  FfiConverterString.lift(
@@ -550,6 +577,7 @@ private let UNIFFI_CALLBACK_UNEXPECTED_ERROR: Int32 = 2
 public protocol EventCallback : AnyObject {
     func onEvent(eventType: String, message: String) 
     func onDataReceived(data: Data)  -> String
+    func addTwoNumbers(a: Int32, b: Int32)  -> Int32
     
 }
 
@@ -578,6 +606,21 @@ fileprivate let foreignCallbackCallbackInterfaceEventCallback : ForeignCallback 
                     )
             var writer = [UInt8]()
             FfiConverterString.write(result, into: &writer)
+            out_buf.pointee = RustBuffer(bytes: writer)
+            return UNIFFI_CALLBACK_SUCCESS
+        }
+        return try makeCall()
+    }
+
+    func invokeAddTwoNumbers(_ swiftCallbackInterface: EventCallback, _ argsData: UnsafePointer<UInt8>, _ argsLen: Int32, _ out_buf: UnsafeMutablePointer<RustBuffer>) throws -> Int32 {
+        var reader = createReader(data: Data(bytes: argsData, count: Int(argsLen)))
+        func makeCall() throws -> Int32 {
+            let result =  swiftCallbackInterface.addTwoNumbers(
+                    a:  try FfiConverterInt32.read(from: &reader), 
+                    b:  try FfiConverterInt32.read(from: &reader)
+                    )
+            var writer = [UInt8]()
+            FfiConverterInt32.write(result, into: &writer)
             out_buf.pointee = RustBuffer(bytes: writer)
             return UNIFFI_CALLBACK_SUCCESS
         }
@@ -615,6 +658,20 @@ fileprivate let foreignCallbackCallbackInterfaceEventCallback : ForeignCallback 
             }
             do {
                 return try invokeOnDataReceived(cb, argsData, argsLen, out_buf)
+            } catch let error {
+                out_buf.pointee = FfiConverterString.lower(String(describing: error))
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+        case 3:
+            let cb: EventCallback
+            do {
+                cb = try FfiConverterCallbackInterfaceEventCallback.lift(handle)
+            } catch {
+                out_buf.pointee = FfiConverterString.lower("EventCallback: Invalid handle")
+                return UNIFFI_CALLBACK_UNEXPECTED_ERROR
+            }
+            do {
+                return try invokeAddTwoNumbers(cb, argsData, argsLen, out_buf)
             } catch let error {
                 out_buf.pointee = FfiConverterString.lower(String(describing: error))
                 return UNIFFI_CALLBACK_UNEXPECTED_ERROR
@@ -677,6 +734,27 @@ extension FfiConverterCallbackInterfaceEventCallback : FfiConverter {
     public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
         ensureCallbackinitialized();
         writeInt(&buf, lower(v))
+    }
+}
+
+fileprivate struct FfiConverterOptionInt32: FfiConverterRustBuffer {
+    typealias SwiftType = Int32?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterInt32.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterInt32.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
     }
 }
 
@@ -778,6 +856,9 @@ private var initializationResult: InitializationResult {
     if (uniffi_uniffi_callback_demo_checksum_func_unregister_callback() != 15590) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_uniffi_callback_demo_checksum_method_callbackservice_call_add_two_numbers() != 39402) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_uniffi_callback_demo_checksum_method_callbackservice_get_status() != 41262) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -797,6 +878,9 @@ private var initializationResult: InitializationResult {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_uniffi_callback_demo_checksum_method_eventcallback_on_data_received() != 9547) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_uniffi_callback_demo_checksum_method_eventcallback_add_two_numbers() != 26463) {
         return InitializationResult.apiChecksumMismatch
     }
 

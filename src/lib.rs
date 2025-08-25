@@ -6,6 +6,7 @@ use std::sync::{Arc, Mutex, OnceLock};
 pub trait EventCallback: Send + Sync {
     fn on_event(&self, event_type: String, message: String);
     fn on_data_received(&self, data: Vec<u8>) -> String;
+    fn add_two_numbers(&self, a: i32, b: i32) -> i32;
 }
 
 // Global registry for callbacks
@@ -77,6 +78,18 @@ impl CallbackService {
             }
         }
     }
+
+    pub fn call_add_two_numbers(&self, a: i32, b: i32) -> Option<i32> {
+        if let Some(id) = *self.callback_id.lock().unwrap() {
+            if let Some(callback) = get_registry().lock().unwrap().get(&id) {
+                Some(callback.add_two_numbers(a, b))
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
 }
 
 // Registration functions
@@ -128,6 +141,10 @@ mod tests {
 
         fn on_data_received(&self, data: Vec<u8>) -> String {
             format!("Received {} bytes", data.len())
+        }
+
+        fn add_two_numbers(&self, a: i32, b: i32) -> i32 {
+            a + b
         }
     }
 

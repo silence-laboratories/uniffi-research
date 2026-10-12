@@ -4,9 +4,60 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      routine-version-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+    open-pull-requests-limit: 5
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
       interval: "weekly"
     cooldown:
       default-days: 7
+    groups:
+      routine-version-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    open-pull-requests-limit: 5
+  - package-ecosystem: gradle
+    directories:
+      - /flutter_uniffi_demo/android
+      - /flutter_uniffi_demo/example/android
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      routine-version-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+  - package-ecosystem: pub
+    directories:
+      - /flutter_uniffi_demo
+      - /flutter_uniffi_demo/example
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      routine-version-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
